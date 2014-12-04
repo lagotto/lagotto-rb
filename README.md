@@ -21,24 +21,14 @@ xxxxx
 * `rake`
 * `launchy`
 
-## Quickstart
+## Install
 
-### Install
-
-#### Release version
-
-Install latest release from [RubyGems](https://rubygems.org/gems/lagotto)
-
-```
-gem install lagotto
-```
-
-#### Development version
+### Development version
 
 Install dependencies
 
 ```
-gem install httparty bibtex-ruby launchy json rake api_cache moneta
+gem install httparty launchy json rake
 sudo gem install thor
 sudo gem install bundler
 git clone https://github.com/sckott/lagotto.git
