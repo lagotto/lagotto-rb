@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Cite - RDoc Documentation</title>
+
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Thor
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">Thor::Actions</span>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-get">#get</a>
+    
+    <li ><a href="#method-i-launch">#launch</a>
+    
+    <li ><a href="#method-i-match">#match</a>
+    
+    <li ><a href="#method-i-search">#search</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Cite">
+  <h1 id="class-Cite" class="class">
+    class Cite
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-get" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get</span><span
+            class="method-args">(tt)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get-source">
+            <pre><span class="ruby-comment"># File bin/cite, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">tt</span>)
+      <span class="ruby-identifier">tt</span> = <span class="ruby-node">&quot;#{tt}&quot;</span>
+      <span class="ruby-comment"># puts tt.to_s</span>
+      <span class="ruby-identifier">tt</span> = <span class="ruby-identifier">tt</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;,&#39;</span>)
+      <span class="ruby-comment"># puts tt</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">out</span> = <span class="ruby-constant">Cites</span>.<span class="ruby-identifier">doi2cit</span>(<span class="ruby-identifier">tt</span>, <span class="ruby-identifier">options</span>[<span class="ruby-value">:format</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:style</span>], 
+                        <span class="ruby-identifier">options</span>[<span class="ruby-value">:locale</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:cache</span>])
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">abort</span>(<span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>)
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Found #{out.length} &quot;</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">out</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;matches&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;match&quot;</span>)
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">entry</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">out</span>
+    <span class="ruby-keyword">if</span> [<span class="ruby-string">&#39;citeproc-json&#39;</span>].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">options</span>[<span class="ruby-string">&#39;format&#39;</span>]
+      <span class="ruby-identifier">pp</span> <span class="ruby-identifier">entry</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">entry</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-launch" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">launch</span><span
+            class="method-args">(doi)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="launch-source">
+            <pre><span class="ruby-comment"># File bin/cite, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">launch</span>(<span class="ruby-identifier">doi</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:oa</span>]
+    <span class="ruby-identifier">url</span> = <span class="ruby-string">&quot;http://macrodocs.org/?doi=&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">doi</span>
+    <span class="ruby-constant">Launchy</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">url</span> = <span class="ruby-string">&quot;http://dx.doi.org/&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">doi</span>
+    <span class="ruby-constant">Launchy</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-match" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">match</span><span
+            class="method-args">(tt)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>method_options :doi =&gt; :boolean</p>
+          
+          
+
+          
+          <div class="method-source-code" id="match-source">
+            <pre><span class="ruby-comment"># File bin/cite, line 14</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">match</span>(<span class="ruby-identifier">tt</span>)
+      <span class="ruby-identifier">tt</span> = <span class="ruby-node">&quot;#{tt}&quot;</span>
+  <span class="ruby-identifier">tt</span> = <span class="ruby-identifier">tt</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;,&#39;</span>)
+  <span class="ruby-identifier">out</span> = <span class="ruby-constant">Cites</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">tt</span>)
+  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">out</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-search" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">search</span><span
+            class="method-args">(tt)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="search-source">
+            <pre><span class="ruby-comment"># File bin/cite, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">search</span>(<span class="ruby-identifier">tt</span>)
+  <span class="ruby-identifier">tt</span> = <span class="ruby-node">&quot;#{tt}&quot;</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Searching with query \&#39;#{tt}\&#39;&quot;</span>
+  <span class="ruby-identifier">out</span> = <span class="ruby-constant">Cites</span>.<span class="ruby-identifier">search</span>(<span class="ruby-identifier">tt</span>, <span class="ruby-identifier">options</span>)
+  
+  <span class="ruby-comment"># Don&#39;t use meta for anything for now</span>
+  <span class="ruby-identifier">items</span> = <span class="ruby-identifier">out</span>[<span class="ruby-string">&quot;items&quot;</span>]
+  <span class="ruby-comment"># Restrict output to number of rows fetched even if more was returned</span>
+  <span class="ruby-identifier">rows</span> = <span class="ruby-identifier">options</span>[<span class="ruby-string">&#39;rows&#39;</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">item</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">items</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">rows</span>]
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;\n&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;  Title: #{item[&#39;title&#39;]}&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;  Year: #{item[&#39;year&#39;]}&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;  Normalized score: #{item[&#39;normalizedScore&#39;]}&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;  DOI: #{item[&#39;doi&#39;]}&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># puts &quot;#{tt}&quot;</span>
+  <span class="ruby-comment"># puts opts[&quot;doi&quot;] ? out[&#39;doi&#39;] : out</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
