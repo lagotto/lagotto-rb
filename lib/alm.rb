@@ -31,60 +31,64 @@ module Alm
 	#   * false: Do use cache at all
 	#   * 'flush': Get a fresh response and cache it
 	#
-	def self.alm(doi, )
-		if format == 'text'
-			type = "#{formatuse}; style=#{style}; locale=#{locale}"
-		else
-			type = formatuse
-		end
-		doi = 'http://dx.doi.org/' + doi
+	# alm('10.1371%252Fjournal.pone.0025110', api_key='rkfDr76z75benY3pytM1')
 
-		if cache == true or cache == 'flush'
-			if cache == true
-				cache_time = 6000
-				msg = "Requested DOI not in cache or is stale, requesting..."
-			elsif cache == 'flush'
-				cache_time = 1
-				msg = "Flushing cache, requesting..."
-			end
+	def self.alm(ids=nil, type=nil, info=nil,
+            source=nil, publisher=nil, order=nil, per_page=nil,
+            page=nil, instance='plos', key=nil, options = {})
 
-			content = APICache.get(cache_key, :cache => cache_time,
-								   :valid => :forever, :period => 0,
-								   :timeout => 30) do
-			    puts msg
-			    response = HTTParty.get(doi, :headers => {"Accept" => type})
+		test_length(source)
+	    type_check(page, Fixnum)
+	    type_check(per_page, Fixnum)
+	    # test_values('info', info, ['summary','detail'])
+	    # test_values('id_type', id_type, ['doi','pmid','pmcid','mendeley_uuid'])
+	    # test_values('instance', instance, ['plos','crossref','copernicus','elife','pensoft','pkp'])
 
-			    # If response code is ok (200) get response body and return
-			    # that from this block. Otherwise an error will be raised.
-			   	begin
-				    if response_ok(response.code)
-				    	content = response.body
-				    end
-					content
-				rescue Exception => e
-					puts e.message
-					puts "Format requested: #{formatuse}"
-					exit
-				end
-			end
-		elsif cache == false
-			puts "Not using cache, requesting..."
-			response = HTTParty.get(doi, :headers => {"Accept" => type})
+		url = urls[instance]
+		headers = {"Accept" => 'application/json'}
+		args = {"ids" => ids, "info" => info, "api_key" => key}
+	    response = HTTParty.get("http://alm.plos.org/api/v5/articles", :query => args, :headers => headers)
 
-			if response_ok(response.code)
-			    content = response.body
-			end
-		else
-			fail "Invalid cache value #{cache}"
-		end
-		# response = HTTParty.get(doi, :headers => {"Accept" => type})
-		if format == 'bibtex'
-			output = BibTeX.parse(content).to_s
-		else
-			output = content
-		end
-		# output.display
-		return output
+	    if response_ok(response.code)
+	    	content = response.body
+	    end
+
+		return content
 	end
 
 end
+
+def type_check(arg, type=String)
+	raise TypeError unless arg.is_a? type
+end
+
+def test_length(input)
+    if !input.is_a? NilClass and str_length(input) > 1
+    	raise TypeError('Parameter "source" must be either nil or length 1')
+    end
+end
+
+def str_length(x)
+	if x.is_a? String
+		1
+	else
+		x.length
+	end
+end
+
+# def test_values(name, input, values)
+#   if input.class == String:
+#     input = input.split(' ')
+#   if type(input) != None:
+#     if len(input) > 1: raise TypeError('Parameter "%s" must be length 1' % name)
+#     if input[0] not in values: raise TypeError('Parameter "%s" must be one of %s' % (name, values))
+# end
+
+urls = {
+	"plos" => "http://alm.plos.org/api/v5/articles",
+	"elife" => "http://lagotto.svr.elifesciences.org/api/v5/articles",
+	"crossref" => "http://det.labs.crossref.org/api/v5/articles",
+	"pkp" => "http://pkp-alm.lib.sfu.ca/api/v5/articles",
+	"copernicus" => "http://metricus.copernicus.org/api/v5/articles",
+	"pensoft" => "http://alm.pensoft.net:81//api/v5/articles"
+}
