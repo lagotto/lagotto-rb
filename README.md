@@ -34,26 +34,24 @@ bundle install
 
 After `bundle install` the `alm` gem is installed and available on the command line or in a Ruby repl.
 
-### Command line
-
-xxx
-
-```
-xxxx
-```
-
-```
-xxxx
-```
-
 ### In Ruby repl
 
-xxx
+Get altmetrics by DOI
+
+```ruby
+Alm.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
+```
+
+```ruby
+=> "{\"total\":1,\"total_pages\":1,\"page\":1,\"error\":null,\"data\":[{\"doi\":\"10.1371/journal.pone.0029797\",\"title\":\"Ecological Guild Evolution and the Discovery of the World's Smallest Vertebrate\",\"issued\":{\"date-parts\":[[2012,1,11]]},\"canonical_url\":null,\"pmid\":\"22253785\",\"pmcid\":\"3256195\",\"mendeley_uuid\":null,\"viewed\":0,\"saved\":0,\"discussed\":0,\"cited\":0,\"update_date\":\"2014-11-15T20:59:22Z\"}]}"
+```
+
+Search for altmetrics
+
+```ruby
 
 ```
-xxxx
-```
 
-```
-xxxx
-```
+### Command line
+
+_not quite done yet_

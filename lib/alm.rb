@@ -38,9 +38,12 @@ module Alm
 	# * options: Options to pass on to HTTParty.get
 	#
 	# Usage:
-	# Alm.alm(ids: '10.1371/journal.pone.0029797', key: 'GKcTr6SrJKYx2KDzywJe', instance: "crossref")
-	# Alm.alm(ids: '10.4081/audiores.2013.e1', key: '1UwwuvPLZzbYxyrcQ3id', instance: "pkp")
-	# Alm.alm(ids: '10.1371/journal.pone.0025110', key: 'rkfDr76z75benY3pytM1', instance: "plos")
+	# Alm.alm(ids: '10.1371/journal.pone.0029797', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+	# Alm.alm(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
+	# Alm.alm(ids: '10.1371/journal.pone.0025110', key: ENV['PLOS_API_KEY'], instance: "plos")
+	#
+	# # Search by source
+	# Alm.alm(source: 'twitter', key: ENV['PLOS_API_KEY'], instance: "plos")
 	#
 	# # get by publisher
 	# require 'HTTParty'
