@@ -5,11 +5,7 @@ alm
 
 __This is alpha software, so expect changes__
 
-## What is it?  
-
 __`alm` - a Ruby client for the Lagotto application for article level metrics data__
-
-xxxxx
 
 ## Dependencies
 
@@ -46,7 +42,7 @@ Alm.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
 => "{\"total\":1,\"total_pages\":1,\"page\":1,\"error\":null,\"data\":[{\"doi\":\"10.1371/journal.pone.0029797\",\"title\":\"Ecological Guild Evolution and the Discovery of the World's Smallest Vertebrate\",\"issued\":{\"date-parts\":[[2012,1,11]]},\"canonical_url\":null,\"pmid\":\"22253785\",\"pmcid\":\"3256195\",\"mendeley_uuid\":null,\"viewed\":0,\"saved\":0,\"discussed\":0,\"cited\":0,\"update_date\":\"2014-11-15T20:59:22Z\"}]}"
 ```
 
-Search for altmetrics
+Search for altmetrics by source
 
 ```ruby
 

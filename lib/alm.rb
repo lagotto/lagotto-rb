@@ -41,9 +41,11 @@ module Alm
 	# Alm.alm(ids: '10.1371/journal.pone.0029797', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
 	# Alm.alm(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
 	# Alm.alm(ids: '10.1371/journal.pone.0025110', key: ENV['PLOS_API_KEY'], instance: "plos")
+	# ids = ["10.1371/journal.pone.0029797","10.1371/journal.pone.0029798"]
+	# Alm.alm(ids: ids, key: ENV['PLOS_API_KEY'], instance: "plos")
 	#
 	# # Search by source
-	# Alm.alm(source: 'twitter', key: ENV['PLOS_API_KEY'], instance: "plos")
+	# Alm.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
 	#
 	# # get by publisher
 	# require 'HTTParty'
@@ -71,6 +73,10 @@ module Alm
 			"pensoft" => "http://alm.pensoft.net:81//api/v5/articles"
 		}
 
+		if ids.class != String and ids != NilClass
+	        ids = ids.join(',')
+	    end
+
 		url = urls[instance]
 		options = {
 		  query: {
@@ -87,12 +93,8 @@ module Alm
 		  headers: {"Accept" => 'application/json'}
 	    }
 	    res = HTTParty.get(url, options)
-
-	    if response_ok(res.code)
-	    	content = res.body
-	    end
-
-		return content
+	    response_ok(res.code)
+		return res
 	end
 
 end
