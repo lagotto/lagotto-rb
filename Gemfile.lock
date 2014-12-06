@@ -1,0 +1,30 @@
+PATH
+  remote: .
+  specs:
+    alm (0.1.0)
+      httparty (~> 0.12)
+      json (~> 1.8)
+      launchy (~> 2.4, >= 2.4.2)
+      thor (~> 0.18)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.3.6)
+    httparty (0.13.3)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    json (1.8.1)
+    launchy (2.4.3)
+      addressable (~> 2.3)
+    multi_xml (0.5.5)
+    rake (0.9.6)
+    thor (0.19.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  alm!
+  bundler (~> 1.6)
+  rake (~> 0)
