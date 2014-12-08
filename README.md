@@ -45,6 +45,10 @@ Alm.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
 Search for altmetrics by source
 
 ```ruby
+Alm.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+```
+
+```ruby
 
 ```
 

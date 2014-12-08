@@ -39,6 +39,7 @@ module Alm
 	#
 	# Usage:
 	# Alm.alm(ids: '10.1371/journal.pone.0029797', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+	# Alm.alm(ids: ['10.1371/journal.pone.0029797','10.1016/j.dsr2.2010.10.029'], key: ENV['CROSSREF_API_KEY'], instance: "crossref")
 	# Alm.alm(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
 	# Alm.alm(ids: '10.1371/journal.pone.0025110', key: ENV['PLOS_API_KEY'], instance: "plos")
 	# ids = ["10.1371/journal.pone.0029797","10.1371/journal.pone.0029798"]
@@ -46,6 +47,7 @@ module Alm
 	#
 	# # Search by source
 	# Alm.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+	# Alm.alm(instance: "crossref", per_page: 5, key: ENV['CROSSREF_API_KEY'])
 	#
 	# # get by publisher
 	# require 'HTTParty'
@@ -72,12 +74,8 @@ module Alm
 			"copernicus" => "http://metricus.copernicus.org/api/v5/articles",
 			"pensoft" => "http://alm.pensoft.net:81//api/v5/articles"
 		}
-
-		if ids.class != String and ids != NilClass
-	        ids = ids.join(',')
-	    end
-
-		url = urls[instance]
+	    url = urls[instance]
+	    ids = join_ids(ids)
 		options = {
 		  query: {
 			ids: ids,
@@ -124,3 +122,15 @@ end
 #     if len(input) > 1: raise TypeError('Parameter "%s" must be length 1' % name)
 #     if input[0] not in values: raise TypeError('Parameter "%s" must be one of %s' % (name, values))
 # end
+
+def join_ids(x)
+	if x.class != NilClass
+		if x.class != String
+			x.join(',')
+		else
+			x
+		end
+	else
+		x
+  end
+end
