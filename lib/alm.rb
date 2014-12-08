@@ -100,6 +100,19 @@ module Alm
 		return res
 	end
 
+	def self.status(key: nil, instance: 'plos', options: {})
+		url = pick_url(instance)
+		options = {
+		  query: {
+				api_key: key
+			},
+		  headers: {"Accept" => 'application/json'}
+	  }
+    res = HTTParty.get(url+'/status', options)
+    response_ok(res.code)
+		return res
+	end
+
 end
 
 def type_check(arg, type=String)
