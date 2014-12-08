@@ -60,38 +60,43 @@ module Alm
             page: 1, instance: 'plos', key: nil, options: {})
 
 		test_length(source)
-	    type_check(page, Fixnum)
-	    type_check(per_page, Fixnum)
-	    # test_values('info', info, ['summary','detail'])
-	    # test_values('id_type', id_type, ['doi','pmid','pmcid','mendeley_uuid'])
-	    # test_values('instance', instance, ['plos','crossref','copernicus','elife','pensoft','pkp'])
+    type_check(page, Fixnum)
+    type_check(per_page, Fixnum)
+    # test_values('info', info, ['summary','detail'])
+    # test_values('id_type', id_type, ['doi','pmid','pmcid','mendeley_uuid'])
+    # test_values('instance', instance, ['plos','crossref','copernicus','elife','pensoft','pkp'])
 
-		urls = {
-			"plos" => "http://alm.plos.org/api/v5/articles",
-			"elife" => "http://lagotto.svr.elifesciences.org/api/v5/articles",
-			"crossref" => "http://det.labs.crossref.org/api/v5/articles",
-			"pkp" => "http://pkp-alm.lib.sfu.ca/api/v5/articles",
-			"copernicus" => "http://metricus.copernicus.org/api/v5/articles",
-			"pensoft" => "http://alm.pensoft.net:81//api/v5/articles"
-		}
-	    url = urls[instance]
-	    ids = join_ids(ids)
+		url = pick_url(instance)
+    ids = join_ids(ids)
 		options = {
 		  query: {
-			ids: ids,
-			info: info,
-			publisher: publisher,
-			type: type,
-            source: source,
-            order: order,
-            per_page: per_page,
-            page: page,
-			api_key: key
-		  },
+				ids: ids,
+				info: info,
+				publisher: publisher,
+				type: type,
+        source: source,
+        order: order,
+        per_page: per_page,
+        page: page,
+				api_key: key
+			},
 		  headers: {"Accept" => 'application/json'}
-	    }
-	    res = HTTParty.get(url, options)
-	    response_ok(res.code)
+	  }
+    res = HTTParty.get(url+'/articles', options)
+    response_ok(res.code)
+		return res
+	end
+
+	def self.requests(key: nil, instance: 'plos', options: {})
+		url = pick_url(instance)
+		options = {
+		  query: {
+				api_key: key
+			},
+		  headers: {"Accept" => 'application/json'}
+	  }
+    res = HTTParty.get(url+'/api_requests', options)
+    response_ok(res.code)
 		return res
 	end
 
@@ -133,4 +138,21 @@ def join_ids(x)
 	else
 		x
   end
+end
+
+def pick_url(x)
+	urls = {
+			"plos" => "http://alm.plos.org/api/v5",
+			"elife" => "http://lagotto.svr.elifesciences.org/api/v5",
+			"crossref" => "http://det.labs.crossref.org/api/v5",
+			"pkp" => "http://pkp-alm.lib.sfu.ca/api/v5",
+			"copernicus" => "http://metricus.copernicus.org/api/v5",
+			"pensoft" => "http://alm.pensoft.net:81//api/v5"
+	}
+	url = urls[x]
+	if url == nil
+		raise TypeError('instance must be one of plos, elife, crossref, pkp, copernicus, or pensoft')
+	else
+		return url
+	end
 end
