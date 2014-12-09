@@ -40,60 +40,60 @@ module Alm
 	# Alm.alm(publisher: ids[0], info: "summary")
 
 	def self.alm(ids: nil, type: nil, info: 'summary',
-            source: nil, publisher: nil, order: nil, per_page: 50,
-            page: 1, instance: 'plos', key: nil, options: {})
+						source: nil, publisher: nil, order: nil, per_page: 50,
+						page: 1, instance: 'plos', key: nil, options: {})
 
 		test_length(source)
-    type_check(page, Fixnum)
-    type_check(per_page, Fixnum)
-    # test_values('info', info, ['summary','detail'])
-    # test_values('id_type', id_type, ['doi','pmid','pmcid','mendeley_uuid'])
-    # test_values('instance', instance, ['plos','crossref','copernicus','elife','pensoft','pkp'])
+		type_check(page, Fixnum)
+		type_check(per_page, Fixnum)
+		# test_values('info', info, ['summary','detail'])
+		# test_values('id_type', id_type, ['doi','pmid','pmcid','mendeley_uuid'])
+		# test_values('instance', instance, ['plos','crossref','copernicus','elife','pensoft','pkp'])
 
 		url = pick_url(instance)
-    ids = join_ids(ids)
+		ids = join_ids(ids)
 		options = {
-		  query: {
+			query: {
 				ids: ids,
 				info: info,
 				publisher: publisher,
 				type: type,
-        source: source,
-        order: order,
-        per_page: per_page,
-        page: page,
+				source: source,
+				order: order,
+				per_page: per_page,
+				page: page,
 				api_key: key
 			},
-		  headers: {"Accept" => 'application/json'}
-	  }
-    res = HTTParty.get(url+'/articles', options)
-    response_ok(res.code)
+			headers: {"Accept" => 'application/json'}
+		}
+		res = HTTParty.get(url+'/articles', options)
+		response_ok(res.code)
 		return res
 	end
 
 	def self.requests(key: nil, instance: 'plos', options: {})
 		url = pick_url(instance)
 		options = {
-		  query: {
+			query: {
 				api_key: key
 			},
-		  headers: {"Accept" => 'application/json'}
-	  }
-    res = HTTParty.get(url+'/api_requests', options)
-    response_ok(res.code)
+			headers: {"Accept" => 'application/json'}
+		}
+		res = HTTParty.get(url+'/api_requests', options)
+		response_ok(res.code)
 		return res
 	end
 
 	def self.status(key: nil, instance: 'plos', options: {})
 		url = pick_url(instance)
 		options = {
-		  query: {
+			query: {
 				api_key: key
 			},
-		  headers: {"Accept" => 'application/json'}
-	  }
-    res = HTTParty.get(url+'/status', options)
-    response_ok(res.code)
+			headers: {"Accept" => 'application/json'}
+		}
+		res = HTTParty.get(url+'/status', options)
+		response_ok(res.code)
 		return res
 	end
 
@@ -103,17 +103,17 @@ end
 def response_ok(code)
 	# See CrossCite documentation http://crosscite.org/cn/
 	case code
-	  when 200
-	    return true
-	  when 204
-	  	raise "The request was OK but there was no metadata available (response code: #{code})"
-	  when 404
-	    raise "The DOI requested doesn't exist (response code: #{code})"
-	  when 406
-	  	raise "Can't serve any requested content type (response code: #{code})"
-	  when 500...600
-	    raise "ZOMG ERROR #{code}"
-  	end
+		when 200
+			return true
+		when 204
+			raise "The request was OK but there was no metadata available (response code: #{code})"
+		when 404
+			raise "The DOI requested doesn't exist (response code: #{code})"
+		when 406
+			raise "Can't serve any requested content type (response code: #{code})"
+		when 500...600
+			raise "ZOMG ERROR #{code}"
+		end
 end
 
 def type_check(arg, type=String)
@@ -121,9 +121,9 @@ def type_check(arg, type=String)
 end
 
 def test_length(input)
-    if !input.is_a? NilClass and str_length(input) > 1
-    	raise TypeError('Parameter "source" must be either nil or length 1')
-    end
+		if !input.is_a? NilClass and str_length(input) > 1
+			raise TypeError('Parameter "source" must be either nil or length 1')
+		end
 end
 
 def str_length(x)
@@ -151,7 +151,7 @@ def join_ids(x)
 		end
 	else
 		x
-  end
+	end
 end
 
 def pick_url(x)
