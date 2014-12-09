@@ -97,6 +97,17 @@ module Alm
     return res
   end
 
+  def self.signposts(ids: nil, type: nil, info: 'summary',
+            source: nil, publisher: nil, order: nil, per_page: 50,
+            page: 1, instance: 'plos', key: nil, options: {})
+
+    temp = Alm.alm(ids: ids, type: type, info: info,
+            source: source, publisher: publisher, order: order, per_page: per_page,
+            page: page, instance: instance, key: key, options: options)
+    res = temp['data'].collect { |p| {"doi"=>p['doi'],"viewed"=>p['viewed'],"saved"=>p['saved'],"discussed"=>p['discussed'],"cited"=>p['cited']} }
+    return res
+  end
+
 end
 
 
