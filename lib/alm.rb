@@ -1,3 +1,27 @@
+module HTTParty
+  module AllowedFormatsDeprecation
+    def const_missing(const)
+      if const.to_s =~ /AllowedFormats$/
+        Kernel.warn("Deprecated: Use HTTParty::Parser::SupportedFormats")
+        HTTParty::Parser::SupportedFormats
+      else
+        super
+      end
+    end
+  end
+
+  extend AllowedFormatsDeprecation
+
+  def self.included(base)
+    base.extend ClassMethods
+    base.send :include, HTTParty::ModuleInheritableAttributes
+    base.send(:mattr_inheritable, :default_options)
+    base.send(:mattr_inheritable, :default_cookies)
+    base.instance_variable_set("@default_options", {})
+    base.instance_variable_set("@default_cookies", CookieHash.new)
+  end
+
+
 require 'httparty'
 require 'json'
 
