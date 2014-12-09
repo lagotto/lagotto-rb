@@ -1,22 +1,6 @@
 require 'httparty'
 require 'json'
 
-def response_ok(code)
-	# See CrossCite documentation http://crosscite.org/cn/
-	case code
-	  when 200
-	    return true
-	  when 204
-	  	raise "The request was OK but there was no metadata available (response code: #{code})"
-	  when 404
-	    raise "The DOI requested doesn't exist (response code: #{code})"
-	  when 406
-	  	raise "Can't serve any requested content type (response code: #{code})"
-	  when 500...600
-	    raise "ZOMG ERROR #{code}"
-  	end
-end
-
 module Alm
  	##
 	# Get a single citation in various formats from a DOI
@@ -28,9 +12,9 @@ module Alm
 	# * source: One source. To get many sources, make many calls.
 	# * publisher: Filter articles to a given publisher, using a crossref_id.
 	# * order: Results are sorted by descending event count when given the source
-    #  name, e.g. &order=wikipedia. Otherwise (the default) results are sorted by
-    #  date descending. When using &source=x, we can only sort by data or that source,
-    #  not a different source.
+  #  name, e.g. &order=wikipedia. Otherwise (the default) results are sorted by
+  #  date descending. When using &source=x, we can only sort by data or that source,
+  #  not a different source.
 	# * per_page: Items per page
 	# * page: Page to retrieve
 	# * instance: One of plos, crossref, pkp, elife, copernicus, pensoft
@@ -113,6 +97,23 @@ module Alm
 		return res
 	end
 
+end
+
+
+def response_ok(code)
+	# See CrossCite documentation http://crosscite.org/cn/
+	case code
+	  when 200
+	    return true
+	  when 204
+	  	raise "The request was OK but there was no metadata available (response code: #{code})"
+	  when 404
+	    raise "The DOI requested doesn't exist (response code: #{code})"
+	  when 406
+	  	raise "Can't serve any requested content type (response code: #{code})"
+	  when 500...600
+	    raise "ZOMG ERROR #{code}"
+  	end
 end
 
 def type_check(arg, type=String)
