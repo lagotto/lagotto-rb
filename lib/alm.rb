@@ -2,7 +2,7 @@ require 'httparty'
 require 'json'
 
 module Alm
- 	##
+	##
 	# Get a single citation in various formats from a DOI
 	#
 	# Args:
@@ -12,9 +12,9 @@ module Alm
 	# * source: One source. To get many sources, make many calls.
 	# * publisher: Filter articles to a given publisher, using a crossref_id.
 	# * order: Results are sorted by descending event count when given the source
-  #  name, e.g. &order=wikipedia. Otherwise (the default) results are sorted by
-  #  date descending. When using &source=x, we can only sort by data or that source,
-  #  not a different source.
+	#  name, e.g. &order=wikipedia. Otherwise (the default) results are sorted by
+	#  date descending. When using &source=x, we can only sort by data or that source,
+	#  not a different source.
 	# * per_page: Items per page
 	# * page: Page to retrieve
 	# * instance: One of plos, crossref, pkp, elife, copernicus, pensoft
@@ -36,7 +36,7 @@ module Alm
 	# # get by publisher
 	# require 'HTTParty'
 	# ids = HTTParty.get("http://api.crossref.org/members")
-    # ids = ids['message']['items'].collect { |p| p['id'] }
+	# ids = ids['message']['items'].collect { |p| p['id'] }
 	# Alm.alm(publisher: ids[0], info: "summary")
 
 	def self.alm(ids: nil, type: nil, info: 'summary',
