@@ -108,6 +108,32 @@ module Alm
     return res
   end
 
+  def self.alerts(source: nil, ids: nil, class_name: nil, level: nil, q: nil,
+    unresolved: nil, per_page: 50, page: 1, user: nil, pwd: nil,
+    instance: 'plos', options: {})
+
+    url = pick_url_alerts(instance)
+    # userpwd = getuserinfo(user, pwd)
+    options = {
+      query: {
+        q: q,
+        source: source,
+        class_name: class_name,
+        source: source,
+        level: level,
+        unresolved: unresolved,
+        ids: ids,
+        rows: per_page,
+        page: page
+      },
+      basic_auth: { username: user, password: pwd }
+    }
+    options[:query] = options[:query].reject{ |i,j| j == nil }
+    res = HTTParty.get(url, options)
+    response_ok(res.code)
+    return res
+  end
+
 end
 
 
@@ -173,6 +199,37 @@ def pick_url(x)
       "pkp" => "http://pkp-alm.lib.sfu.ca/api/v5",
       "copernicus" => "http://metricus.copernicus.org/api/v5",
       "pensoft" => "http://alm.pensoft.net:81//api/v5"
+  }
+  url = urls[x]
+  if url == nil
+    raise TypeError('instance must be one of plos, elife, crossref, pkp, copernicus, or pensoft')
+  else
+    return url
+  end
+end
+
+def getuserinfo(x: nil, y: nil)
+  usr = ifnot(x, ENV["PLOS_ALERTS_USER"])
+  pwd = ifnot(y, ENV["PLOS_ALERTS_PWD"])
+  return { "key" => usr, "pwd" => pwd }
+end
+
+def ifnot(x, y)
+  if x == nil
+    return y
+  else
+    return x
+  end
+end
+
+def pick_url_alerts(x)
+  urls = {
+    "plos" => "http://alm.plos.org/api/v4/alerts",
+    "elife" => "http://lagotto.svr.elifesciences.org/api/v4/alerts",
+    "crossref" => "http://det.labs.crossref.org/api/v4/alerts",
+    "pkp" => "http://pkp-alm.lib.sfu.ca/api/v4/alerts",
+    "copernicus" => "http://metricus.copernicus.org/api/v4/alerts",
+    "pensoft" => "http://alm.pensoft.net:81//api/v4/alerts"
   }
   url = urls[x]
   if url == nil
