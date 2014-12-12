@@ -66,6 +66,7 @@ module Alm
       },
       headers: {"Accept" => 'application/json'}
     }
+    options[:query] = options[:query].reject{ |i,j| j == nil }
     res = HTTParty.get(url+'/articles', options)
     response_ok(res.code)
     return res
@@ -148,9 +149,41 @@ module Alm
       },
       headers: {"Accept" => 'application/json'}
     }
+    options[:query] = options[:query].reject{ |i,j| j == nil }
     res = HTTParty.get(url+'/articles', options)
     response_ok(res.code)
     return res
+  end
+
+  def self.events(ids: nil, type: nil,
+    source: nil, publisher: nil, order: nil, per_page: 50,
+    page: 1, instance: 'plos', key: nil, options: {})
+
+    test_length(source)
+    type_check(page, Fixnum)
+    type_check(per_page, Fixnum)
+
+    url = pick_url(instance)
+    ids = join_ids(ids)
+    options = {
+      query: {
+        ids: ids,
+        info: "detail",
+        publisher: publisher,
+        type: type,
+        source: source,
+        order: order,
+        per_page: per_page,
+        page: page,
+        api_key: key
+      },
+      headers: {"Accept" => 'application/json'}
+    }
+    options[:query] = options[:query].reject{ |i,j| j == nil }
+    res = HTTParty.get(url+'/articles', options)
+    response_ok(res.code)
+    source_dat = res['data'].collect { |i| i['sources'].collect { |j| { "name"=> j['name'], "events"=> j['events'], "events_url"=> j['events_url'], "events_csl"=> j['events_csl'] } } }
+    return source_dat
   end
 
 end
