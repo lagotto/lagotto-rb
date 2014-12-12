@@ -134,6 +134,25 @@ module Alm
     return res
   end
 
+  def self.sources(source: nil, info: 'summary',
+    per_page: 50, page: 1, instance: 'plos', key: nil, options: {})
+
+    url = pick_url(instance)
+    options = {
+      query: {
+        source: source,
+        info: info,
+        per_page: per_page,
+        page: page,
+        api_key: key
+      },
+      headers: {"Accept" => 'application/json'}
+    }
+    res = HTTParty.get(url+'/articles', options)
+    response_ok(res.code)
+    return res
+  end
+
 end
 
 
