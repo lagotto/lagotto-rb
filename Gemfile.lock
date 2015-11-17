@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    alm (0.1.0)
+    lagotto-rb (0.1.1.9000)
       httparty (~> 0.12)
       json (~> 1.8)
       launchy (~> 2.4, >= 2.4.2)
@@ -10,11 +10,11 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.3.6)
-    httparty (0.13.3)
+    addressable (2.3.8)
+    httparty (0.13.7)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
-    json (1.8.1)
+    json (1.8.3)
     launchy (2.4.3)
       addressable (~> 2.3)
     multi_xml (0.5.5)
@@ -25,6 +25,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  alm!
   bundler (~> 1.6)
+  lagotto-rb!
   rake (~> 0)
+
+BUNDLED WITH
+   1.10.6

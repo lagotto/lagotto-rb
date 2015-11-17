@@ -14,12 +14,14 @@ Gem::Specification.new do |s|
   s.description = "Lagotto client for Ruby - get altmetrics from any Lagotto installation."
   s.authors     = ["Scott Chamberlain"]
   s.email       = 'myrmecocystus@gmail.com'
-  s.files = `git ls-files -z`.split("\x0").reject {|f| f.match(%r{^(test|spec|features)/}) }
   s.homepage    = 'http://github.com/lagotto/lagotto-rb'
   s.licenses    = 'MIT'
+
+  s.files = `git ls-files -z`.split("\x0").reject {|f| f.match(%r{^(test|spec|features)/}) }
   s.require_paths = ["lib"]
   s.bindir      = 'bin'
   s.executables = ['lagotto']
+
   s.add_development_dependency "bundler", "~> 1.6"
   s.add_development_dependency "rake", '~> 0'
   s.add_runtime_dependency 'httparty', '~> 0.12'

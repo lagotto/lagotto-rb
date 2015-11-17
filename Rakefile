@@ -10,7 +10,7 @@ end
 desc "Run tests"
 task :default => :test
 
-desc "Build serrano docs"
+desc "Build lagotto-rb docs"
 task :docs do
 	system "yardoc"
 end
@@ -25,12 +25,12 @@ task :clean do
   system "ls | grep [0-9].gem | xargs rm"
 end
 
-desc "Build serrano"
+desc "Build lagotto-rb"
 task :build do
 	system "gem build lagotto-rb.gemspec"
 end
 
-desc "Install serrano"
+desc "Install lagotto-rb"
 task :install => :build do
 	system "gem install lagotto-rb-#{Lagotto::VERSION}.gem"
 end
