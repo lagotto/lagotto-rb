@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   # s.version     = Lagotto::VERSION
   s.platform    = Gem::Platform::RUBY
   s.required_ruby_version = '>= 2.0'
-  s.version     = '0.1.1.9000'
+  s.version     = '0.1.0.9000'
   s.date        = '2015-11-17'
   s.summary     = "Lagotto client for Ruby"
   s.description = "Lagotto client for Ruby - get altmetrics from any Lagotto installation."
