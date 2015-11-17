@@ -5,7 +5,7 @@ require 'lagotto-rb/version'
 
 Gem::Specification.new do |s|
   s.name        = 'lagotto-rb'
-  s.version     = Lagotto::VERSION
+  # s.version     = Lagotto::VERSION
   s.platform    = Gem::Platform::RUBY
   s.required_ruby_version = '>= 2.0'
   s.version     = '0.1.1.9000'
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "bundler", "~> 1.6"
   s.add_development_dependency "rake", '~> 0'
+
   s.add_runtime_dependency 'httparty', '~> 0.12'
   s.add_runtime_dependency 'thor', '~> 0.18'
   s.add_runtime_dependency 'json', '~> 1.8'
