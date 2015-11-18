@@ -1,11 +1,11 @@
-alm
-======
+lagotto-rb
+==========
 
-[![Build Status](https://api.travis-ci.org/sckott/alm.png)](https://travis-ci.org/sckott/alm)
+[![Build Status](https://api.travis-ci.org/lagotto/lagotto-rb.png)](https://travis-ci.org/lagotto/lagotto-rb)
 
 __This is alpha software, so expect changes__
 
-__`alm` - a Ruby client for the Lagotto application for article level metrics data__
+__`lagotto-rb` - a Ruby client for the Lagotto application for article level metrics data__
 
 ## Dependencies
 
@@ -23,19 +23,19 @@ Install dependencies
 ```
 gem install httparty json rake
 sudo gem install bundler
-git clone https://github.com/sckott/alm.git
-cd alm
+git clone https://github.com/lagotto/lagotto-rb.git
+cd lagotto-rb
 bundle install
 ```
 
-After `bundle install` the `alm` gem is installed and available on the command line or in a Ruby repl.
+After `bundle install` the `lagotto-rb` gem is installed and available on the command line or in a Ruby repl.
 
 ### In Ruby repl
 
 Get altmetrics by DOI
 
 ```ruby
-Alm.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
+Lagotto.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
 ```
 
 ```ruby
@@ -45,11 +45,11 @@ Alm.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
 Search for altmetrics by source
 
 ```ruby
-Alm.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+Lagotto.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
 ```
 
 ```ruby
-
+"xxx"
 ```
 
 ### Command line

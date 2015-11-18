@@ -1,7 +1,7 @@
 require 'httparty'
 require 'json'
 
-module Alm
+module Lagotto
   ##
   # Get a single citation in various formats from a DOI
   #
@@ -22,22 +22,22 @@ module Alm
   # * options: Options to pass on to HTTParty.get
   #
   # Usage:
-  # Alm.alm(ids: '10.1371/journal.pone.0029797', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
-  # Alm.alm(ids: ['10.1371/journal.pone.0029797','10.1016/j.dsr2.2010.10.029'], key: ENV['CROSSREF_API_KEY'], instance: "crossref")
-  # Alm.alm(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
-  # Alm.alm(ids: '10.1371/journal.pone.0025110', key: ENV['PLOS_API_KEY'], instance: "plos")
+  # Lagotto.alm(ids: '10.1371/journal.pone.0029797', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+  # Lagotto.alm(ids: ['10.1371/journal.pone.0029797','10.1016/j.dsr2.2010.10.029'], key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+  # Lagotto.alm(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
+  # Lagotto.alm(ids: '10.1371/journal.pone.0025110', key: ENV['PLOS_API_KEY'], instance: "plos")
   # ids = ["10.1371/journal.pone.0029797","10.1371/journal.pone.0029798"]
-  # Alm.alm(ids: ids, key: ENV['PLOS_API_KEY'], instance: "plos")
+  # Lagotto.alm(ids: ids, key: ENV['PLOS_API_KEY'], instance: "plos")
   #
   # # Search by source
-  # Alm.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
-  # Alm.alm(instance: "crossref", per_page: 5, key: ENV['CROSSREF_API_KEY'])
+  # Lagotto.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+  # Lagotto.alm(instance: "crossref", per_page: 5, key: ENV['CROSSREF_API_KEY'])
   #
   # # get by publisher
   # require 'HTTParty'
   # ids = HTTParty.get("http://api.crossref.org/members")
   # ids = ids['message']['items'].collect { |p| p['id'] }
-  # Alm.alm(publisher: ids[0], info: "summary")
+  # Lagotto.alm(publisher: ids[0], info: "summary")
 
   def self.alm(ids: nil, type: nil, info: 'summary',
             source: nil, publisher: nil, order: nil, per_page: 50,
@@ -102,7 +102,7 @@ module Alm
             source: nil, publisher: nil, order: nil, per_page: 50,
             page: 1, instance: 'plos', key: nil, options: {})
 
-    temp = Alm.alm(ids: ids, type: type, info: info,
+    temp = Lagotto.alm(ids: ids, type: type, info: info,
             source: source, publisher: publisher, order: order, per_page: per_page,
             page: page, instance: instance, key: key, options: options)
     res = temp['data'].collect { |p| {"doi"=>p['doi'],"viewed"=>p['viewed'],"saved"=>p['saved'],"discussed"=>p['discussed'],"cited"=>p['cited']} }
@@ -245,12 +245,12 @@ end
 
 def pick_url(x)
   urls = {
-      "plos" => "http://alm.plos.org/api/v5",
+      "plos" => "http://Lagotto.plos.org/api/v5",
       "elife" => "http://lagotto.svr.elifesciences.org/api/v5",
       "crossref" => "http://det.labs.crossref.org/api/v5",
-      "pkp" => "http://pkp-alm.lib.sfu.ca/api/v5",
+      "pkp" => "http://pkp-Lagotto.lib.sfu.ca/api/v5",
       "copernicus" => "http://metricus.copernicus.org/api/v5",
-      "pensoft" => "http://alm.pensoft.net:81//api/v5"
+      "pensoft" => "http://Lagotto.pensoft.net:81//api/v5"
   }
   url = urls[x]
   if url == nil
@@ -276,12 +276,12 @@ end
 
 def pick_url_alerts(x)
   urls = {
-    "plos" => "http://alm.plos.org/api/v4/alerts",
+    "plos" => "http://Lagotto.plos.org/api/v4/alerts",
     "elife" => "http://lagotto.svr.elifesciences.org/api/v4/alerts",
     "crossref" => "http://det.labs.crossref.org/api/v4/alerts",
-    "pkp" => "http://pkp-alm.lib.sfu.ca/api/v4/alerts",
+    "pkp" => "http://pkp-Lagotto.lib.sfu.ca/api/v4/alerts",
     "copernicus" => "http://metricus.copernicus.org/api/v4/alerts",
-    "pensoft" => "http://alm.pensoft.net:81//api/v4/alerts"
+    "pensoft" => "http://Lagotto.pensoft.net:81//api/v4/alerts"
   }
   url = urls[x]
   if url == nil
