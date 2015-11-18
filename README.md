@@ -35,7 +35,7 @@ After `bundle install` the `lagotto-rb` gem is installed and available on the co
 Get altmetrics by DOI
 
 ```ruby
-Alm.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
+Lagotto.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
 ```
 
 ```ruby
@@ -45,7 +45,7 @@ Alm.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
 Search for altmetrics by source
 
 ```ruby
-Alm.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+Lagotto.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
 ```
 
 ```ruby
