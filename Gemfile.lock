@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lagotto-rb (0.1.1.9000)
+    lagotto-rb (0.1.0.9000)
       httparty (~> 0.12)
       json (~> 1.8)
       launchy (~> 2.4, >= 2.4.2)

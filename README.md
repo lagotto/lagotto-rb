@@ -2,6 +2,8 @@ lagotto-rb
 ==========
 
 [![Build Status](https://api.travis-ci.org/lagotto/lagotto-rb.png)](https://travis-ci.org/lagotto/lagotto-rb)
+[![gem version](https://img.shields.io/gem/v/lagotto-rb.svg)](https://rubygems.org/gems/lagotto-rb)
+[![codecov.io](http://codecov.io/github/lagotto/lagotto-rb/coverage.svg?branch=master)](http://codecov.io/github/lagotto/lagotto-rb?branch=master)
 
 __This is alpha software, so expect changes__
 
@@ -16,6 +18,12 @@ __`lagotto-rb` - a Ruby client for the Lagotto application for article level met
 
 ## Install
 
+### Release version
+
+```
+gem install lagotto-rb
+```
+
 ### Development version
 
 Install dependencies
@@ -28,30 +36,72 @@ cd lagotto-rb
 bundle install
 ```
 
-After `bundle install` the `lagotto-rb` gem is installed and available on the command line or in a Ruby repl.
-
 ### In Ruby repl
 
 Get altmetrics by DOI
 
 ```ruby
-Lagotto.alm(ids: '10.1371/journal.pone.0029797', key: '<key>', instance: "crossref")
+Lagotto.works(ids: 'http://doi.org/10.15468/DL.SQNY5P', instance: "crossref")
 ```
 
 ```ruby
-=> "{\"total\":1,\"total_pages\":1,\"page\":1,\"error\":null,\"data\":[{\"doi\":\"10.1371/journal.pone.0029797\",\"title\":\"Ecological Guild Evolution and the Discovery of the World's Smallest Vertebrate\",\"issued\":{\"date-parts\":[[2012,1,11]]},\"canonical_url\":null,\"pmid\":\"22253785\",\"pmcid\":\"3256195\",\"mendeley_uuid\":null,\"viewed\":0,\"saved\":0,\"discussed\":0,\"cited\":0,\"update_date\":\"2014-11-15T20:59:22Z\"}]}"
+=> {"meta"=>
+  {"status"=>"ok",
+   "message-type"=>"work-list",
+   "message-version"=>"6.0.0",
+   "total"=>1,
+   "total_pages"=>1,
+   "page"=>1},
+ "works"=>
+  [{"id"=>"http://doi.org/10.15468/DL.SQNY5P",
+    "author"=>[{"family"=>"gbif.org"}],
+    "title"=>"GBIF Occurrence Download",
+    "issued"=>{"date-parts"=>[[2015]]},
+    "DOI"=>"10.15468/DL.SQNY5P",
+    "events"=>{},
+    "timestamp"=>"2015-11-18T16:11:46Z"}]}
 ```
 
 Search for altmetrics by source
 
 ```ruby
-Lagotto.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
+Lagotto.works(source: 'twitter', instance: "crossref")
 ```
 
 ```ruby
-"xxx"
+=> {"meta"=>
+  {"status"=>"ok",
+   "message-type"=>"work-list",
+   "message-version"=>"6.0.0",
+   "total"=>62467,
+   "total_pages"=>1250,
+   "page"=>1},
+ "works"=>
+  [{"id"=>"http://doi.org/10.15468/SQZYAJ",
+    "author"=>
+     [{"literal"=>"46fec380-8e1d-11dd-8679-b8a03c50a862",
+       "ORCID"=>"http://orcid.org/46fec380-8e1d-11dd-8679-b8a03c50a862"}],
+    "title"=>"Kartlegging av spredning av fremmede bartrær",
+    "issued"=>{"date-parts"=>[[2015]]},
+    "DOI"=>"10.15468/SQZYAJ",
+    "events"=>{},
+    "timestamp"=>"2015-11-18T16:34:52Z"},
+   {"id"=>"http://doi.org/10.15468/DL.N7WA77",
+    "author"=>[{"family"=>"gbif.org"}],
+    "title"=>"GBIF Occurrence Download",
+    "issued"=>{"date-parts"=>[[2015]]},
+    "DOI"=>"10.15468/DL.N7WA77",
+    "events"=>{},
+    "timestamp"=>"2015-11-18T16:34:16Z"},
+
+...
 ```
 
-### Command line
+### To DO
 
-_not quite done yet_
+* Command line
+
+## Meta
+
+* Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+* License: MIT

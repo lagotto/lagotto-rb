@@ -22,24 +22,24 @@ module Lagotto
   # * options: Options to pass on to HTTParty.get
   #
   # Usage:
-  # Lagotto.alm(ids: '10.1371/journal.pone.0029797', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
-  # Lagotto.alm(ids: ['10.1371/journal.pone.0029797','10.1016/j.dsr2.2010.10.029'], key: ENV['CROSSREF_API_KEY'], instance: "crossref")
-  # Lagotto.alm(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
-  # Lagotto.alm(ids: '10.1371/journal.pone.0025110', key: ENV['PLOS_API_KEY'], instance: "plos")
-  # ids = ["10.1371/journal.pone.0029797","10.1371/journal.pone.0029798"]
-  # Lagotto.alm(ids: ids, key: ENV['PLOS_API_KEY'], instance: "plos")
+  # Lagotto.works(ids: 'http://doi.org/10.15468/DL.SQNY5P', instance: "crossref")
+  # Lagotto.works(ids: ['http://doi.org/10.1371/journal.pone.0029797','http://doi.org/10.1016/j.dsr2.2010.10.029'], instance: "crossref")
+  # Lagotto.works(ids: 'http://doi.org/10.1371/journal.pone.0025110', instance: "plos")
+  # ids = ["http://doi.org/10.1371/journal.pone.0029797","http://doi.org/10.1371/journal.pone.0029798"]
+  # Lagotto.works(ids: ids, instance: "plos")
+  # Lagotto.works(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
   #
   # # Search by source
-  # Lagotto.alm(source: 'twitter', key: ENV['CROSSREF_API_KEY'], instance: "crossref")
-  # Lagotto.alm(instance: "crossref", per_page: 5, key: ENV['CROSSREF_API_KEY'])
+  # Lagotto.works(source: 'twitter', instance: "crossref")
+  # Lagotto.works(instance: "crossref", per_page: 5)
   #
   # # get by publisher
   # require 'HTTParty'
   # ids = HTTParty.get("http://api.crossref.org/members")
   # ids = ids['message']['items'].collect { |p| p['id'] }
-  # Lagotto.alm(publisher: ids[0], info: "summary")
+  # Lagotto.works(publisher: ids[0], info: "summary")
 
-  def self.alm(ids: nil, type: nil, info: 'summary',
+  def self.works(ids: nil, type: nil, info: 'summary',
             source: nil, publisher: nil, order: nil, per_page: 50,
             page: 1, instance: 'plos', key: nil, options: {})
 
@@ -67,7 +67,7 @@ module Lagotto
       headers: {"Accept" => 'application/json'}
     }
     options[:query] = options[:query].reject{ |i,j| j == nil }
-    res = HTTParty.get(url+'/articles', options)
+    res = HTTParty.get(url + '/works', options)
     response_ok(res.code)
     return res
   end
@@ -118,7 +118,6 @@ module Lagotto
     options = {
       query: {
         q: q,
-        source: source,
         class_name: class_name,
         source: source,
         level: level,
@@ -245,12 +244,12 @@ end
 
 def pick_url(x)
   urls = {
-      "plos" => "http://Lagotto.plos.org/api/v5",
-      "elife" => "http://lagotto.svr.elifesciences.org/api/v5",
-      "crossref" => "http://det.labs.crossref.org/api/v5",
-      "pkp" => "http://pkp-Lagotto.lib.sfu.ca/api/v5",
-      "copernicus" => "http://metricus.copernicus.org/api/v5",
-      "pensoft" => "http://Lagotto.pensoft.net:81//api/v5"
+    "plos" => "http://alm.plos.org/api",
+    "elife" => "http://alm.svr.elifesciences.org/api/v5",
+    "crossref" => "http://det.labs.crossref.org/api",
+    "pkp" => "http://pkp-alm.lib.sfu.ca/api/v5",
+    "copernicus" => "http://metricus.copernicus.org/api/v5",
+    "pensoft" => "http://alm.pensoft.net:81//api/v5"
   }
   url = urls[x]
   if url == nil
