@@ -1,6 +1,9 @@
 require 'httparty'
 require 'json'
 
+require "lagotto-rb/version"
+require "lagotto-rb/request"
+
 module Lagotto
   ##
   # Get a single citation in various formats from a DOI
@@ -41,7 +44,8 @@ module Lagotto
 
   def self.works(ids: nil, type: nil, info: 'summary',
             source: nil, publisher: nil, order: nil, per_page: 50,
-            page: 1, instance: 'plos', key: nil, options: {})
+            page: 1, instance: 'plos', key: nil, options: nil,
+            verbose: false)
 
     test_length(source)
     type_check(page, Fixnum)
@@ -52,24 +56,27 @@ module Lagotto
 
     url = pick_url(instance)
     ids = join_ids(ids)
-    options = {
-      query: {
-        ids: ids,
-        info: info,
-        publisher: publisher,
-        type: type,
-        source: source,
-        order: order,
-        per_page: per_page,
-        page: page,
-        api_key: key
-      },
-      headers: {"Accept" => 'application/json'}
-    }
-    options[:query] = options[:query].reject{ |i,j| j == nil }
-    res = HTTParty.get(url + '/works', options)
-    response_ok(res.code)
-    return res
+    Request.new(url, 'works', ids, type, info, source,
+      publisher, order, per_page, page, key, options, verbose).perform
+
+    # options = {
+    #   query: {
+    #     ids: ids,
+    #     info: info,
+    #     publisher: publisher,
+    #     type: type,
+    #     source: source,
+    #     order: order,
+    #     per_page: per_page,
+    #     page: page,
+    #     api_key: key
+    #   },
+    #   headers: {"Accept" => 'application/json'}
+    # }
+    # options[:query] = options[:query].reject{ |i,j| j == nil }
+    # res = HTTParty.get(url + '/works', options)
+    # response_ok(res.code)
+    # return res
   end
 
   def self.requests(key: nil, instance: 'plos', options: {})
