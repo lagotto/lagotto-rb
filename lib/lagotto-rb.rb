@@ -4,45 +4,66 @@ require 'json'
 require "lagotto-rb/version"
 require "lagotto-rb/request"
 require "lagotto-rb/req"
+require "lagotto-rb/helpers"
 
+# @!macro lagotto_params
+#   @param type [String] One of doi, pmid, pmcid, or mendeley_uuid
+#   @param source [String] One source. To get many sources, make many calls.
+#   @param publisher [String] Filter articles to a given publisher, using a crossref_id.
+#   @param order [String] Results are sorted by descending event count when given the source name, e.g. `&order=wikipedia`. Otherwise (the default) results are sorted by date descending. When using `&source=x`, we can only sort by data or that source, not a different source.
+#   @param per_page [String] Items per page
+#   @param page [String] Page to retrieve
+#   @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+#   @param key [String] API key
+#   @param verbose [Boolean] Print request headers to stdout. Default: false
+
+# @!macro lagotto_options
+#   @param options [Hash] Hash of options for configuring the request, passed on to Faraday.new
+#     :timeout      - [Fixnum] open/read timeout Integer in seconds
+#     :open_timeout - [Fixnum] read timeout Integer in seconds
+#     :proxy        - [Hash] hash of proxy options
+#       :uri - [String] Proxy Server URI
+#       :user - [String] Proxy server username
+#       :password - [String] Proxy server password
+#     :params_encoder - [Hash] not sure what this is
+#     :bind           - [Hash] A hash with host and port values
+#     :boundary       - [String] of the boundary value
+#     :oauth          - [Hash] A hash with OAuth details
+
+##
+# Lagotto - The top level module for using methods
+# to access a Lagotto instance API
+#
+# The following methods, matching the main Crossref API routes, are available:
+# * `Lagotto.works` - Use the /works endpoint
+# * `Lagotto.status` - Get instance status, requires authentication
+# * `Lagotto.requests` - Search requests, requires authentication
+# * `Lagotto.alerts` - Search alerts, requires authentication
+# * `Lagotto.events` - Get events back
+# * `Lagotto.sources` - Search /works routes by source
 module Lagotto
   ##
-  # Get a single citation in various formats from a DOI
+  # Make a `/works` route request
   #
-  # Args:
-  # * ids: One or more DOIs
-  # * type: One of doi, pmid, pmcid, or mendeley_uuid
-  # * info: One of summary or detail
-  # * source: One source. To get many sources, make many calls.
-  # * publisher: Filter articles to a given publisher, using a crossref_id.
-  # * order: Results are sorted by descending event count when given the source
-  #  name, e.g. &order=wikipedia. Otherwise (the default) results are sorted by
-  #  date descending. When using &source=x, we can only sort by data or that source,
-  #  not a different source.
-  # * per_page: Items per page
-  # * page: Page to retrieve
-  # * instance: One of plos, crossref, pkp, elife, copernicus, pensoft
-  # * key: API key
-  # * options: Options to pass on to HTTParty.get
+  # @!macro lagotto_params
+  # @!macro lagotto_options
+  # @return [Hash] A hash
   #
-  # Usage:
-  # Lagotto.works(ids: 'http://doi.org/10.15468/DL.SQNY5P', instance: "crossref")
-  # Lagotto.works(ids: ['http://doi.org/10.1371/journal.pone.0029797','http://doi.org/10.1016/j.dsr2.2010.10.029'], instance: "crossref")
-  # Lagotto.works(ids: 'http://doi.org/10.1371/journal.pone.0025110', instance: "plos")
-  # ids = ["http://doi.org/10.1371/journal.pone.0029797","http://doi.org/10.1371/journal.pone.0029798"]
-  # Lagotto.works(ids: ids, instance: "plos")
-  # Lagotto.works(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
+  # @example
+  #      require 'lagotto-rb'
+  #      Lagotto.works(ids: 'http://doi.org/10.15468/DL.SQNY5P', instance: "crossref")
+  #      Lagotto.works(ids: ['http://doi.org/10.1371/journal.pone.0029797','http://doi.org/10.1016/j.dsr2.2010.10.029'], instance: "crossref")
+  #      Lagotto.works(ids: 'http://doi.org/10.1371/journal.pone.0025110', instance: "plos")
+  #      ids = ["http://doi.org/10.1371/journal.pone.0029797","http://doi.org/10.1371/journal.pone.0029798"]
+  #      Lagotto.works(ids: ids, instance: "plos")
+  #      Lagotto.works(ids: '10.4081/audiores.2013.e1', key: ENV['PKP_API_KEY'], instance: "pkp")
   #
-  # # Search by source
-  # Lagotto.works(source: 'twitter', instance: "crossref")
-  # Lagotto.works(instance: "crossref", per_page: 5)
+  #      # Search by source
+  #      Lagotto.works(source: 'twitter', instance: "crossref")
+  #      Lagotto.works(instance: "crossref", per_page: 5)
   #
-  # # get by publisher
-  # require 'HTTParty'
-  # ids = HTTParty.get("http://api.crossref.org/members")
-  # ids = ids['message']['items'].collect { |p| p['id'] }
-  # Lagotto.works(publisher: ids[0], info: "summary")
-
+  #      # get by publisher
+  #      Lagotto.works(publisher: 311, info: "summary")
   def self.works(ids: nil, type: nil, source: nil, publisher: nil,
             order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
             options: nil, verbose: false)
@@ -60,31 +81,21 @@ module Lagotto
       publisher, order, per_page, page, key, options, verbose).perform
   end
 
-  def self.requests(key: nil, instance: 'plos', options: {})
-    url = pick_url(instance)
-    options = {
-      query: {
-        api_key: key
-      },
-      headers: {"Accept" => 'application/json'}
-    }
-    res = HTTParty.get(url+'/api_requests', options)
-    response_ok(res.code)
-    return res
-  end
-
+  ##
+  # Make a `/status` route request
+  #
+  # @param key [String] API key
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #      require 'lagotto-rb'
+  #      Lagotto.status(key: ENV['PLOS_API_KEY'])
   def self.status(key: nil, instance: 'plos', options: nil, verbose: false)
     url = pick_url(instance)
     BasicRequest.new(url, 'status', key, options, verbose).perform
-    # options = {
-    #   query: {
-    #     api_key: key
-    #   },
-    #   headers: {"Accept" => 'application/json'}
-    # }
-    # res = HTTParty.get(url+'/status', options)
-    # response_ok(res.code)
-    # return res
   end
 
   def self.alerts(source: nil, ids: nil, class_name: nil, level: nil, q: nil,
@@ -112,8 +123,28 @@ module Lagotto
     return res
   end
 
-  def self.sources(source: nil,
-    per_page: 50, page: 1, instance: 'plos', key: nil,
+  ##
+  # Make a `/works` route request by source
+  #
+  # @param source [String] One source. To get many sources, make many calls.
+  # @param per_page [String] Items per page
+  # @param page [String] Page to retrieve
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param key [String] API key
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    # a single source
+  #    Lagotto.sources(source: 'twitter', per_page: 2)
+  #    Lagotto.sources(source: 'mendeley', per_page: 3)
+  #    Lagotto.sources(source: 'facebook', per_page: 1)
+
+  #    # many sources
+  #    sources = ['facebook','twitter','mendeley']
+  #    sources.collect { |x| Lagotto.sources(source: x, per_page: 1) }
+  def self.sources(source: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
     options: nil, verbose: false)
 
     url = pick_url(instance)
@@ -121,9 +152,34 @@ module Lagotto
       nil, nil, per_page, page, key, options, verbose).perform
   end
 
-  def self.events(ids: nil, type: nil,
-    source: nil, publisher: nil, order: nil, per_page: 50,
-    page: 1, instance: 'plos', key: nil, options: nil, verbose: false)
+  ##
+  # Make a `/events` route request
+  #
+  # @!macro lagotto_params
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #   # Get events by DOI
+  #   ## swap out the key and instance to change provider
+  #   Lagotto.events(ids: '10.1371/journal.pone.0029797', instance: "crossref")
+  #   Lagotto.events(ids: ['10.1371/journal.pone.0029797','10.1016/j.dsr2.2010.10.029'], instance: "crossref")
+  #   Lagotto.events(ids: '10.4081/audiores.2013.e1', instance: "pkp")
+  #   Lagotto.events(ids: "10.1371/journal.pone.0029797")
+  #   ids = ["10.1371/journal.pone.0029797","10.1371/journal.pone.0029798"]
+  #   Lagotto.events(ids: ids)
+  #
+  #   # Search by source
+  #   Lagotto.events(source: 'twitter', instance: "crossref")
+  #   Lagotto.events(instance: "crossref", per_page: 5)
+  #
+  #   # Get data by publisher
+  #   ids = HTTParty.get("http://api.crossref.org/members")
+  #   ids = ids['message']['items'].collect { |p| p['id'] }
+  #   Lagotto.events(publisher: ids[0], info: "summary")
+  def self.events(ids: nil, type: nil, source: nil, publisher: nil,
+    order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
+    options: nil, verbose: false)
 
     test_length(source)
     type_check(page, Fixnum)
@@ -134,107 +190,4 @@ module Lagotto
       publisher, order, per_page, page, key, options, verbose).perform
   end
 
-end
-
-
-def response_ok(code)
-  # See CrossCite documentation http://crosscite.org/cn/
-  case code
-    when 200
-      return true
-    when 204
-      raise "The request was OK but there was no metadata available (response code: #{code})"
-    when 404
-      raise "The DOI requested doesn't exist (response code: #{code})"
-    when 406
-      raise "Can't serve any requested content type (response code: #{code})"
-    when 500...600
-      raise "ZOMG ERROR #{code}"
-    end
-end
-
-def type_check(arg, type=String)
-  raise TypeError unless arg.is_a? type
-end
-
-def test_length(input)
-    if !input.is_a? NilClass and str_length(input) > 1
-      raise TypeError('Parameter "source" must be either nil or length 1')
-    end
-end
-
-def str_length(x)
-  if x.is_a? String
-    1
-  else
-    x.length
-  end
-end
-
-# def test_values(name, input, values)
-#   if input.class == String:
-#     input = input.split(' ')
-#   if type(input) != None:
-#     if len(input) > 1: raise TypeError('Parameter "%s" must be length 1' % name)
-#     if input[0] not in values: raise TypeError('Parameter "%s" must be one of %s' % (name, values))
-# end
-
-def join_ids(x)
-  if x.class != NilClass
-    if x.class != String
-      x.join(',')
-    else
-      x
-    end
-  else
-    x
-  end
-end
-
-def pick_url(x)
-  urls = {
-    "plos" => "http://alm.plos.org/api",
-    "elife" => "http://alm.svr.elifesciences.org/api/v5",
-    "crossref" => "http://det.labs.crossref.org/api",
-    "pkp" => "http://pkp-alm.lib.sfu.ca/api/v5",
-    "copernicus" => "http://metricus.copernicus.org/api/v5",
-    "pensoft" => "http://alm.pensoft.net:81//api/v5"
-  }
-  url = urls[x]
-  if url == nil
-    raise TypeError('instance must be one of plos, elife, crossref, pkp, copernicus, or pensoft')
-  else
-    return url
-  end
-end
-
-def getuserinfo(x: nil, y: nil)
-  usr = ifnot(x, ENV["PLOS_ALERTS_USER"])
-  pwd = ifnot(y, ENV["PLOS_ALERTS_PWD"])
-  return { "key" => usr, "pwd" => pwd }
-end
-
-def ifnot(x, y)
-  if x == nil
-    return y
-  else
-    return x
-  end
-end
-
-def pick_url_alerts(x)
-  urls = {
-    "plos" => "http://Lagotto.plos.org/api/v4/alerts",
-    "elife" => "http://lagotto.svr.elifesciences.org/api/v4/alerts",
-    "crossref" => "http://det.labs.crossref.org/api/v4/alerts",
-    "pkp" => "http://pkp-Lagotto.lib.sfu.ca/api/v4/alerts",
-    "copernicus" => "http://metricus.copernicus.org/api/v4/alerts",
-    "pensoft" => "http://Lagotto.pensoft.net:81//api/v4/alerts"
-  }
-  url = urls[x]
-  if url == nil
-    raise TypeError('instance must be one of plos, elife, crossref, pkp, copernicus, or pensoft')
-  else
-    return url
-  end
 end
