@@ -87,18 +87,6 @@ module Lagotto
     # return res
   end
 
-  # def self.signposts(ids: nil, type: nil,
-  #           source: nil, publisher: nil, order: nil, per_page: 50,
-  #           page: 1, instance: 'plos', key: nil, options: {})
-
-  #   temp = Lagotto.works(ids: ids, type: type,
-  #           source: source, publisher: publisher, order: order, per_page: per_page,
-  #           page: page, instance: instance, key: key, options: options)
-  #   return temp
-  #   # res = temp['data'].collect { |p| {"doi"=>p['doi'],"viewed"=>p['viewed'],"saved"=>p['saved'],"discussed"=>p['discussed'],"cited"=>p['cited']} }
-  #   # return res
-  # end
-
   def self.alerts(source: nil, ids: nil, class_name: nil, level: nil, q: nil,
     unresolved: nil, per_page: 50, page: 1, user: nil, pwd: nil,
     instance: 'plos', options: {})
