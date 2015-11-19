@@ -17,7 +17,7 @@ class TestWorks < Test::Unit::TestCase
   end
 
   def test_works
-    res = Lagotto.works(ids: 'http://doi.org/10.15468/DL.SQNY5P', instance: "crossref")
+    res = Lagotto.works(ids: @id, instance: "crossref")
     assert_equal(2, res.length)
     assert_equal(Hash, res.class)
     assert_equal(Array, res['works'].class)

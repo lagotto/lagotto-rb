@@ -56,7 +56,7 @@ module Lagotto
 
     url = pick_url(instance)
     ids = join_ids(ids)
-    Request.new(url, 'works', ids, type, info, source,
+    Request.new(url, 'works', ids, type, source,
       publisher, order, per_page, page, key, options, verbose).perform
   end
 
