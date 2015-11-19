@@ -3,6 +3,7 @@ require 'json'
 
 require "lagotto-rb/version"
 require "lagotto-rb/request"
+require "lagotto-rb/req"
 
 module Lagotto
   ##
@@ -42,10 +43,9 @@ module Lagotto
   # ids = ids['message']['items'].collect { |p| p['id'] }
   # Lagotto.works(publisher: ids[0], info: "summary")
 
-  def self.works(ids: nil, type: nil, info: 'summary',
-            source: nil, publisher: nil, order: nil, per_page: 50,
-            page: 1, instance: 'plos', key: nil, options: nil,
-            verbose: false)
+  def self.works(ids: nil, type: nil, source: nil, publisher: nil,
+            order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
+            options: nil, verbose: false)
 
     test_length(source)
     type_check(page, Fixnum)
@@ -58,25 +58,6 @@ module Lagotto
     ids = join_ids(ids)
     Request.new(url, 'works', ids, type, info, source,
       publisher, order, per_page, page, key, options, verbose).perform
-
-    # options = {
-    #   query: {
-    #     ids: ids,
-    #     info: info,
-    #     publisher: publisher,
-    #     type: type,
-    #     source: source,
-    #     order: order,
-    #     per_page: per_page,
-    #     page: page,
-    #     api_key: key
-    #   },
-    #   headers: {"Accept" => 'application/json'}
-    # }
-    # options[:query] = options[:query].reject{ |i,j| j == nil }
-    # res = HTTParty.get(url + '/works', options)
-    # response_ok(res.code)
-    # return res
   end
 
   def self.requests(key: nil, instance: 'plos', options: {})
@@ -92,29 +73,31 @@ module Lagotto
     return res
   end
 
-  def self.status(key: nil, instance: 'plos', options: {})
+  def self.status(key: nil, instance: 'plos', options: nil, verbose: false)
     url = pick_url(instance)
-    options = {
-      query: {
-        api_key: key
-      },
-      headers: {"Accept" => 'application/json'}
-    }
-    res = HTTParty.get(url+'/status', options)
-    response_ok(res.code)
-    return res
+    BasicRequest.new(url, 'status', key, options, verbose).perform
+    # options = {
+    #   query: {
+    #     api_key: key
+    #   },
+    #   headers: {"Accept" => 'application/json'}
+    # }
+    # res = HTTParty.get(url+'/status', options)
+    # response_ok(res.code)
+    # return res
   end
 
-  def self.signposts(ids: nil, type: nil, info: 'summary',
-            source: nil, publisher: nil, order: nil, per_page: 50,
-            page: 1, instance: 'plos', key: nil, options: {})
+  # def self.signposts(ids: nil, type: nil,
+  #           source: nil, publisher: nil, order: nil, per_page: 50,
+  #           page: 1, instance: 'plos', key: nil, options: {})
 
-    temp = Lagotto.alm(ids: ids, type: type, info: info,
-            source: source, publisher: publisher, order: order, per_page: per_page,
-            page: page, instance: instance, key: key, options: options)
-    res = temp['data'].collect { |p| {"doi"=>p['doi'],"viewed"=>p['viewed'],"saved"=>p['saved'],"discussed"=>p['discussed'],"cited"=>p['cited']} }
-    return res
-  end
+  #   temp = Lagotto.works(ids: ids, type: type,
+  #           source: source, publisher: publisher, order: order, per_page: per_page,
+  #           page: page, instance: instance, key: key, options: options)
+  #   return temp
+  #   # res = temp['data'].collect { |p| {"doi"=>p['doi'],"viewed"=>p['viewed'],"saved"=>p['saved'],"discussed"=>p['discussed'],"cited"=>p['cited']} }
+  #   # return res
+  # end
 
   def self.alerts(source: nil, ids: nil, class_name: nil, level: nil, q: nil,
     unresolved: nil, per_page: 50, page: 1, user: nil, pwd: nil,
@@ -141,55 +124,26 @@ module Lagotto
     return res
   end
 
-  def self.sources(source: nil, info: 'summary',
-    per_page: 50, page: 1, instance: 'plos', key: nil, options: {})
+  def self.sources(source: nil,
+    per_page: 50, page: 1, instance: 'plos', key: nil,
+    options: nil, verbose: false)
 
     url = pick_url(instance)
-    options = {
-      query: {
-        source: source,
-        info: info,
-        per_page: per_page,
-        page: page,
-        api_key: key
-      },
-      headers: {"Accept" => 'application/json'}
-    }
-    options[:query] = options[:query].reject{ |i,j| j == nil }
-    res = HTTParty.get(url+'/articles', options)
-    response_ok(res.code)
-    return res
+    Request.new(url, 'works', nil, nil, source,
+      nil, nil, per_page, page, key, options, verbose).perform
   end
 
   def self.events(ids: nil, type: nil,
     source: nil, publisher: nil, order: nil, per_page: 50,
-    page: 1, instance: 'plos', key: nil, options: {})
+    page: 1, instance: 'plos', key: nil, options: nil, verbose: false)
 
     test_length(source)
     type_check(page, Fixnum)
     type_check(per_page, Fixnum)
-
     url = pick_url(instance)
     ids = join_ids(ids)
-    options = {
-      query: {
-        ids: ids,
-        info: "detail",
-        publisher: publisher,
-        type: type,
-        source: source,
-        order: order,
-        per_page: per_page,
-        page: page,
-        api_key: key
-      },
-      headers: {"Accept" => 'application/json'}
-    }
-    options[:query] = options[:query].reject{ |i,j| j == nil }
-    res = HTTParty.get(url+'/articles', options)
-    response_ok(res.code)
-    source_dat = res['data'].collect { |i| i['sources'].collect { |j| { "name"=> j['name'], "events"=> j['events'], "events_url"=> j['events_url'], "events_csl"=> j['events_csl'] } } }
-    return source_dat
+    Request.new(url, 'events', ids, type, source,
+      publisher, order, per_page, page, key, options, verbose).perform
   end
 
 end
