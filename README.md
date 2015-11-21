@@ -9,6 +9,11 @@ __This is alpha software, so expect changes__
 
 __`lagotto-rb` - a Ruby client for the Lagotto application for article level metrics data__
 
+Other Lagotto clients:
+
+* R - [alm](https://github.com/ropensci/alm)
+* Python - [pyalm](https://github.com/lagotto/pyalm)
+
 ## Dependencies
 
 * `HTTParty` gem to make web calls to Crossref APIs
