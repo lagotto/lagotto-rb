@@ -85,12 +85,12 @@ end
 
 def pick_url_alerts(x)
   urls = {
-    "plos" => "http://Lagotto.plos.org/api/v4/alerts",
+    "plos" => "http://alm.plos.org/api/alerts",
     "elife" => "http://lagotto.svr.elifesciences.org/api/v4/alerts",
     "crossref" => "http://det.labs.crossref.org/api/v4/alerts",
-    "pkp" => "http://pkp-Lagotto.lib.sfu.ca/api/v4/alerts",
+    "pkp" => "http://pkp-alm.lib.sfu.ca/api/v4/alerts",
     "copernicus" => "http://metricus.copernicus.org/api/v4/alerts",
-    "pensoft" => "http://Lagotto.pensoft.net:81//api/v4/alerts"
+    "pensoft" => "http://alm.pensoft.net:81//api/v4/alerts"
   }
   url = urls[x]
   if url == nil
