@@ -98,31 +98,6 @@ module Lagotto
     BasicRequest.new(url, 'status', key, options, verbose).perform
   end
 
-  def self.alerts(source: nil, ids: nil, class_name: nil, level: nil, q: nil,
-    unresolved: nil, per_page: 50, page: 1, user: nil, pwd: nil,
-    instance: 'plos', options: {})
-
-    url = pick_url_alerts(instance)
-    # userpwd = getuserinfo(user, pwd)
-    options = {
-      query: {
-        q: q,
-        class_name: class_name,
-        source: source,
-        level: level,
-        unresolved: unresolved,
-        ids: ids,
-        rows: per_page,
-        page: page
-      },
-      basic_auth: { username: user, password: pwd }
-    }
-    options[:query] = options[:query].reject{ |i,j| j == nil }
-    res = HTTParty.get(url, options)
-    response_ok(res.code)
-    return res
-  end
-
   ##
   # Make a `/works` route request by source
   #
@@ -150,6 +125,28 @@ module Lagotto
     url = pick_url(instance)
     Request.new(url, 'works', nil, nil, source,
       nil, nil, per_page, page, key, options, verbose).perform
+  end
+
+  ##
+  # Make a `/publishers` route request
+  #
+  # @param publisher [Fixnum] Publisher id
+  # @param page [String] Page to retrieve
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    Lagotto.publishers()
+  #    Lagotto.publishers(publisher: 340)
+  #    Lagotto.publishers(instance: 'crossref')
+  def self.publishers(publisher: nil, page: 1, instance: 'plos', options: nil, verbose: false)
+    url = pick_url(instance) + '/publishers'
+    if !publisher.nil?
+      url = url + '/' + publisher.to_s
+    end
+    BasicRequest.new(url, '', nil, options, verbose).perform
   end
 
   ##
