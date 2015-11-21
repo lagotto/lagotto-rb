@@ -1,51 +1,85 @@
 #!/usr/bin/env ruby
-# module: citescli
-
 
 require "thor"
+require "lagotto-rb"
+require "multi_json"
 
-class Alm < Thor
+class Lg < Thor
   include Thor::Actions
-  require 'alm'
-  require 'launchy'
-  require 'json'
-  require 'pp'
+  # class_option :json, :type => :boolean, :default => false
 
-  desc "search for altmetrics"
-  method_option :ids, :default => nil
-  method_option :type, :default => nil
-  method_option :info, :default => nil
-  method_option :source, :default => nil
-  method_option :publisher, :default => nil
-  method_option :order, :default => nil
-  method_option :per_page, :default => nil
-  method_option :page, :default => nil
-  method_option :instance, :default => nil
-  method_option :key, :default => nil
-  method_option :options, :default => nil
-  def alm(tt)
-    tt = "#{tt}"
-    say "Searching with doi \'#{tt}\'", :blue
-    out = Alm.alm(tt, options)
+  desc "works [ids]", "Get works by ids"
+  long_desc <<-LONGDESC
+    `lagotto works` accepts one or more ids to search for works
 
-    #     begin
-    #   out = Cites.doi2cit(tt, options[:format], options[:style],
-    #                       options[:locale], options[:cache])
-    # rescue Exception => e
-    #   abort(e.message)
-    # end
+    Toggle `json` to get simplified (summary) or complete output (JSON)
 
-    say "Found #{out.length} " + (out.length > 1 ? "matches" : "match"), :green
-    # for entry in out
-    #   if ['citeproc-json'].include? options['format']
-    #     pp entry
-    #   else
-    #     puts entry
-    #   end
-    # end
+    # A single id
+    \x5$ lagotto works http://doi.org/10.1371/journal.pone.0025110
+
+    DOI: 10.1371/journal.pone.0033693
+    \x5type: journal-article
+    \x5title: Methylphenidate Exposure Induces Dopamine Neuron Loss and Activation of Microglia in the Basal Ganglia of Mice
+
+    # No ids
+    \x5$ lagotto works --limit=2
+
+    DOI: 10.1371/journal.pgen.1005692
+    \x5id: http://doi.org/10.1371/journal.pgen.1005692
+    \x5title: T
+
+    DOI: 10.1371/journal.pgen.1005425
+    \x5id: http://doi.org/10.1371/journal.pgen.1005425
+    \x5title: C
+
+    # JSON output, parse with jq
+    \x5$ lagotto works --limit=2 --json=true | jq .works[].DOI
+
+    "10.1371/journal.pgen.1005692"
+    \x5"10.1371/journal.pgen.1005425"
+  LONGDESC
+  option :limit, :type => :numeric, :default => nil
+  option :json, :type => :boolean, :default => false
+  def works(ids = nil)
+    out = Lagotto.works(ids: ids, per_page: options[:limit])
+    if !options[:json]
+      if ids.nil?
+        out = out['works'].collect { |x| x.select { |k,v| k[/DOI|id|^title$/] } }
+      else
+        out = [out['works'][0].select { |k,v| k[/DOI|id|^title$/] }]
+      end
+      out.each do |x|
+        puts 'DOI: ' + x['DOI'].to_s
+        puts 'id: ' + x['id']
+        puts 'title: ' + x['title'][0]
+        puts
+      end
+    else
+      puts MultiJson.encode(out)
+    end
+  end
+
+  desc "version", "Get lagotto-rb version"
+  def version
+    puts Lagotto::VERSION
+  end
+
+  private
+
+  def print_works(data)
+    if data.is_a? Array
+      data = data[0]['message']['items']
+    else
+      data = data.collect { |x| x['message'].select { |k,v| k[/DOI|type|title/] } }
+    end
+    data.each do |x|
+      puts 'DOI: ' + x['DOI']
+      puts 'type: ' + x['type']
+      puts 'title: ' + x['title'][0]
+      puts
+    end
   end
 
 end
 
-Alm.start(ARGV)
-
+Lg.start(ARGV)
