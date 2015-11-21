@@ -93,9 +93,10 @@ module Lagotto
   # @example
   #      require 'lagotto-rb'
   #      Lagotto.status(key: ENV['PLOS_API_KEY'])
+  #      Lagotto.status(key: ENV['PLOS_API_KEY'])
   def self.status(key: nil, instance: 'plos', options: nil, verbose: false)
     url = pick_url(instance)
-    BasicRequest.new(url, 'status', key, options, verbose).perform
+    BasicRequest.new(url, 'status', key, options, verbose, {}).perform
   end
 
   ##
@@ -130,7 +131,7 @@ module Lagotto
   ##
   # Make a `/publishers` route request
   #
-  # @param publisher [Fixnum] Publisher id
+  # @param id [Fixnum] Publisher id
   # @param page [String] Page to retrieve
   # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
   # @param verbose [Boolean] Print request headers to stdout. Default: false
@@ -139,14 +140,83 @@ module Lagotto
   #
   # @example
   #    Lagotto.publishers()
-  #    Lagotto.publishers(publisher: 340)
+  #    Lagotto.publishers(id: 340)
   #    Lagotto.publishers(instance: 'crossref')
-  def self.publishers(publisher: nil, page: 1, instance: 'plos', options: nil, verbose: false)
+  def self.publishers(id: nil, page: 1, instance: 'plos', options: nil, verbose: false)
     url = pick_url(instance) + '/publishers'
-    if !publisher.nil?
-      url = url + '/' + publisher.to_s
+    if !id.nil?
+      url = url + '/' + id.to_s
     end
-    BasicRequest.new(url, '', nil, options, verbose).perform
+    BasicRequest.new(url, '', nil, options, verbose, {}).perform
+  end
+
+  ##
+  # Make a `/groups` route request
+  #
+  # @param id [Fixnum] Group id
+  # @param page [String] Page to retrieve
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    Lagotto.groups()
+  #    Lagotto.groups(instance: 'crossref')
+  #    Lagotto.groups(id: 'recommended', instance: 'crossref')
+  def self.groups(id: nil, page: 1, instance: 'plos', options: nil, verbose: false)
+    url = pick_url(instance) + '/groups'
+    if !id.nil?
+      url = url + '/' + id.to_s
+    end
+    BasicRequest.new(url, '', nil, options, verbose, {}).perform
+  end
+
+  ##
+  # Make a `/references` route request
+  #
+  # Returns list of references for a particular work, source and/or relation_type
+  #
+  # @param work_id [String] Work ID
+  # @param work_ids [String] Work IDs
+  # @param q [String] Query for ids
+  # @param relation_type_id [String] Relation_type ID
+  # @param source_id [String] Source ID
+  # @param page [String] Page number
+  # @param per_page [String] Results per page (0-1000), Default: 1000
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    Lagotto.references(per_page: 5, instance: 'crossref')
+  #    Lagotto.references(work_id: 'http://doi.org/10.6084/M9.FIGSHARE.1598061', instance: 'crossref')
+  def self.references(work_id: nil, work_ids: nil, q: nil, relation_type_id: nil,
+    source_id: nil, page: 1, per_page: 1000,
+    instance: 'plos', options: nil, verbose: false)
+
+    url = pick_url(instance)
+    args = { work_id: work_id, work_ids: work_ids, q: q,
+      relation_type_id: relation_type_id, source_id: source_id,
+      page: page, per_page: per_page }
+    BasicRequest.new(url, 'references', nil, options, verbose, args).perform
+  end
+
+  ##
+  # Make a `/work_types` route request
+  #
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    Lagotto.work_types()
+  #    Lagotto.work_types(instance: 'crossref')
+  def self.work_types(instance: 'plos', options: nil, verbose: false)
+    url = pick_url(instance)
+    BasicRequest.new(url, 'work_types', nil, options, verbose, {}).perform
   end
 
   ##

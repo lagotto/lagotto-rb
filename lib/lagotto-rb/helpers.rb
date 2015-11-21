@@ -55,8 +55,10 @@ end
 def pick_url(x)
   urls = {
     "plos" => "http://alm.plos.org/api",
-    "elife" => "http://alm.svr.elifesciences.org/api/v5",
     "crossref" => "http://det.labs.crossref.org/api",
+    "datacite" => "http://dlm.datacite.org/api",
+    "datacite_profiles" => "https://profiles.labs.datacite.org/api",
+    "elife" => "http://alm.svr.elifesciences.org/api/v5",
     "pkp" => "http://pkp-alm.lib.sfu.ca/api/v5",
     "copernicus" => "http://metricus.copernicus.org/api/v5",
     "pensoft" => "http://alm.pensoft.net:81//api/v5"

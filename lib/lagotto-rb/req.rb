@@ -11,18 +11,21 @@ module Lagotto
     attr_accessor :key
     attr_accessor :options
     attr_accessor :verbose
+    attr_accessor :addargs
 
-    def initialize(url, path, key, options, verbose)
+    def initialize(url, path, key, options, verbose, addargs)
 
       self.url = url
       self.path = path
       self.key = key
       self.options = options
       self.verbose = verbose
+      self.addargs = addargs
     end
 
     def perform
       args = { api_key: self.key }
+      args = args.merge(addargs)
       opts = args.delete_if { |k, v| v.nil? }
 
       if verbose
