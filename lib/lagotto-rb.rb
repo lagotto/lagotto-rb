@@ -82,24 +82,6 @@ module Lagotto
   end
 
   ##
-  # Make a `/status` route request
-  #
-  # @param key [String] API key
-  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
-  # @param verbose [Boolean] Print request headers to stdout. Default: false
-  # @!macro lagotto_options
-  # @return [Hash] A hash
-  #
-  # @example
-  #      require 'lagotto-rb'
-  #      Lagotto.status(key: ENV['PLOS_API_KEY'])
-  #      Lagotto.status(key: ENV['PLOS_API_KEY'])
-  def self.status(key: nil, instance: 'plos', options: nil, verbose: false)
-    url = pick_url(instance)
-    BasicRequest.new(url, 'status', key, options, verbose, {}).perform
-  end
-
-  ##
   # Make a `/works` route request by source
   #
   # @param source [String] One source. To get many sources, make many calls.
@@ -113,19 +95,57 @@ module Lagotto
   #
   # @example
   #    # a single source
-  #    Lagotto.sources(source: 'twitter', per_page: 2)
-  #    Lagotto.sources(source: 'mendeley', per_page: 3)
-  #    Lagotto.sources(source: 'facebook', per_page: 1)
+  #    Lagotto.works_sources(source: 'twitter', per_page: 2)
+  #    Lagotto.works_sources(source: 'mendeley', per_page: 3)
+  #    Lagotto.works_sources(source: 'facebook', per_page: 1)
 
   #    # many sources
   #    sources = ['facebook','twitter','mendeley']
-  #    sources.collect { |x| Lagotto.sources(source: x, per_page: 1) }
-  def self.sources(source: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
+  #    sources.collect { |x| Lagotto.works_sources(source: x, per_page: 1) }
+  def self.works_sources(source: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
     options: nil, verbose: false)
 
     url = pick_url(instance)
     Request.new(url, 'works', nil, nil, source,
       nil, nil, per_page, page, key, options, verbose).perform
+  end
+
+  ##
+  # Make a `/events` route request
+  #
+  # @!macro lagotto_params
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #   # Get events by DOI
+  #   ## swap out the key and instance to change provider
+  #   Lagotto.events(ids: '10.1371/journal.pone.0029797', instance: "crossref")
+  #   Lagotto.events(ids: ['10.1371/journal.pone.0029797','10.1016/j.dsr2.2010.10.029'], instance: "crossref")
+  #   Lagotto.events(ids: '10.4081/audiores.2013.e1', instance: "pkp")
+  #   Lagotto.events(ids: "10.1371/journal.pone.0029797")
+  #   ids = ["10.1371/journal.pone.0029797","10.1371/journal.pone.0029798"]
+  #   Lagotto.events(ids: ids)
+  #
+  #   # Search by source
+  #   Lagotto.events(source: 'twitter', instance: "crossref")
+  #   Lagotto.events(instance: "crossref", per_page: 5)
+  #
+  #   # Get data by publisher
+  #   ids = HTTParty.get("http://api.crossref.org/members")
+  #   ids = ids['message']['items'].collect { |p| p['id'] }
+  #   Lagotto.events(publisher: ids[0], info: "summary")
+  def self.events(ids: nil, type: nil, source: nil, publisher: nil,
+    order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
+    options: nil, verbose: false)
+
+    test_length(source)
+    type_check(page, Fixnum)
+    type_check(per_page, Fixnum)
+    url = pick_url(instance)
+    ids = join_ids(ids)
+    Request.new(url, 'events', ids, type, source,
+      publisher, order, per_page, page, key, options, verbose).perform
   end
 
   ##
@@ -220,41 +240,101 @@ module Lagotto
   end
 
   ##
-  # Make a `/events` route request
+  # Make a `/docs` route request
   #
-  # @!macro lagotto_params
+  # @param id [Fixnum] Document id
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
   # @!macro lagotto_options
   # @return [Hash] A hash
   #
   # @example
-  #   # Get events by DOI
-  #   ## swap out the key and instance to change provider
-  #   Lagotto.events(ids: '10.1371/journal.pone.0029797', instance: "crossref")
-  #   Lagotto.events(ids: ['10.1371/journal.pone.0029797','10.1016/j.dsr2.2010.10.029'], instance: "crossref")
-  #   Lagotto.events(ids: '10.4081/audiores.2013.e1', instance: "pkp")
-  #   Lagotto.events(ids: "10.1371/journal.pone.0029797")
-  #   ids = ["10.1371/journal.pone.0029797","10.1371/journal.pone.0029798"]
-  #   Lagotto.events(ids: ids)
-  #
-  #   # Search by source
-  #   Lagotto.events(source: 'twitter', instance: "crossref")
-  #   Lagotto.events(instance: "crossref", per_page: 5)
-  #
-  #   # Get data by publisher
-  #   ids = HTTParty.get("http://api.crossref.org/members")
-  #   ids = ids['message']['items'].collect { |p| p['id'] }
-  #   Lagotto.events(publisher: ids[0], info: "summary")
-  def self.events(ids: nil, type: nil, source: nil, publisher: nil,
-    order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
-    options: nil, verbose: false)
+  #    Lagotto.docs()
+  #    Lagotto.docs(instance: 'crossref')
+  #    Lagotto.docs(id: 'counter', instance: 'crossref')
+  def self.docs(id: nil, instance: 'plos', options: nil, verbose: false)
+    url = pick_url(instance) + '/docs'
+    if !id.nil?
+      url = url + '/' + id.to_s
+    end
+    BasicRequest.new(url, '', nil, options, verbose, {}).perform
+  end
 
-    test_length(source)
-    type_check(page, Fixnum)
-    type_check(per_page, Fixnum)
+  ##
+  # Make a `/relation_types` route request
+  #
+  # @param id [Fixnum] Relation type id
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    Lagotto.relation_types()
+  #    Lagotto.relation_types(instance: 'crossref')
+  #    Lagotto.relation_types(id: 'corrects', instance: 'crossref')
+  def self.relation_types(id: nil, instance: 'plos', options: nil, verbose: false)
+    url = pick_url(instance) + '/relation_types'
+    if !id.nil?
+      url = url + '/' + id.to_s
+    end
+    BasicRequest.new(url, '', nil, options, verbose, {}).perform
+  end
+
+  ##
+  # Make a `/sources` route request
+  #
+  # @param id [Fixnum] Source id
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    Lagotto.sources(instance: 'datacite')
+  #    Lagotto.sources(instance: 'crossref')
+  #    Lagotto.sources(id: 'reddit', instance: 'crossref')
+  def self.sources(id: nil, instance: 'plos', options: nil, verbose: false)
+    url = pick_url(instance) + '/sources'
+    if !id.nil?
+      url = url + '/' + id.to_s
+    end
+    BasicRequest.new(url, '', nil, options, verbose, {}).perform
+  end
+
+  ##
+  # Make a `/recommendations` route request
+  #
+  # @param id [Fixnum] A work id
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #    Lagotto.recommendations(id: '10.1371/journal.ppat.1005123')
+  #    Lagotto.recommendations(id: '10.1371/journal.pgen.1005625')
+  def self.recommendations(id:, instance: 'plos', options: nil, verbose: false)
+    url = pick_url(instance) + '/works/' + id.to_s + '/recommendations'
+    BasicRequest.new(url, '', nil, options, verbose, {}).perform
+  end
+
+  ##
+  # Make a `/status` route request
+  #
+  # @param key [String] API key
+  # @param instance [String] One of plos, crossref, pkp, elife, copernicus, pensoft
+  # @param verbose [Boolean] Print request headers to stdout. Default: false
+  # @!macro lagotto_options
+  # @return [Hash] A hash
+  #
+  # @example
+  #      require 'lagotto-rb'
+  #      Lagotto.status(key: ENV['PLOS_API_KEY'])
+  #      Lagotto.status(key: ENV['PLOS_API_KEY'])
+  def self.status(key: nil, instance: 'plos', options: nil, verbose: false)
     url = pick_url(instance)
-    ids = join_ids(ids)
-    Request.new(url, 'events', ids, type, source,
-      publisher, order, per_page, page, key, options, verbose).perform
+    BasicRequest.new(url, 'status', key, options, verbose, {}).perform
   end
 
 end
