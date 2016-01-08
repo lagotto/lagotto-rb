@@ -62,7 +62,7 @@ module Lagotto
   #      Lagotto.works(instance: "crossref", per_page: 5)
   #
   #      # get by publisher
-  #      Lagotto.works(publisher: 311, info: "summary")
+  #      Lagotto.works(publisher: 311)
   def self.works(ids: nil, type: nil, source: nil, publisher: nil,
             order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
             options: nil, verbose: false)
@@ -70,7 +70,6 @@ module Lagotto
     test_length(source)
     type_check(page, Fixnum)
     type_check(per_page, Fixnum)
-    # test_values('info', info, ['summary','detail'])
     # test_values('id_type', id_type, ['doi','pmid','pmcid','mendeley_uuid'])
     # test_values('instance', instance, ['plos','crossref','copernicus','elife','pensoft','pkp'])
 
@@ -134,7 +133,7 @@ module Lagotto
   #   ids = Faraday.new(:url => "http://api.crossref.org/members").get
   #   json = MultiJson.load(ids.body)
   #   ids = json['message']['items'].collect { |p| p['id'] }
-  #   Lagotto.events(publisher: ids[0], info: "summary")
+  #   Lagotto.events(publisher: ids[0])
   def self.events(ids: nil, type: nil, source: nil, publisher: nil,
     order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,
     options: nil, verbose: false)
