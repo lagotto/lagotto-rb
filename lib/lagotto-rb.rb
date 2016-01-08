@@ -6,6 +6,7 @@ require "lagotto-rb/req"
 require "lagotto-rb/helpers"
 
 # @!macro lagotto_params
+#   @param ids [String] one or more work identifier
 #   @param type [String] One of doi, pmid, pmcid, or mendeley_uuid
 #   @param source [String] One source. To get many sources, make many calls.
 #   @param publisher [String] Filter articles to a given publisher, using a crossref_id.
