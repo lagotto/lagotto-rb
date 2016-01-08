@@ -1,5 +1,4 @@
-require 'httparty'
-require 'json'
+require "multi_json"
 
 require "lagotto-rb/version"
 require "lagotto-rb/request"
@@ -132,8 +131,9 @@ module Lagotto
   #   Lagotto.events(instance: "crossref", per_page: 5)
   #
   #   # Get data by publisher
-  #   ids = HTTParty.get("http://api.crossref.org/members")
-  #   ids = ids['message']['items'].collect { |p| p['id'] }
+  #   ids = Faraday.new(:url => "http://api.crossref.org/members").get
+  #   json = MultiJson.load(ids.body)
+  #   ids = json['message']['items'].collect { |p| p['id'] }
   #   Lagotto.events(publisher: ids[0], info: "summary")
   def self.events(ids: nil, type: nil, source: nil, publisher: nil,
     order: nil, per_page: 50, page: 1, instance: 'plos', key: nil,

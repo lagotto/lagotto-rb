@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version     = Lagotto::VERSION
   s.platform    = Gem::Platform::RUBY
   s.required_ruby_version = '>= 2.0'
-  s.date        = '2015-11-21'
+  s.date        = '2016-01-08'
   s.summary     = "Lagotto client for Ruby"
   s.description = "Lagotto client for Ruby - get altmetrics from any Lagotto installation."
   s.authors     = ["Scott Chamberlain"]
@@ -32,6 +32,4 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'faraday', '~> 0.9.1'
   s.add_runtime_dependency 'faraday_middleware', '~> 0.10.0'
   s.add_runtime_dependency 'multi_json', '~> 1.0'
-  s.add_runtime_dependency 'httparty', '~> 0.12'
-  s.add_runtime_dependency 'json', '~> 1.8'
 end

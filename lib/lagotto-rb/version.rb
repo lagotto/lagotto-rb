@@ -1,3 +1,3 @@
 module Lagotto
-  VERSION = "0.1.2.9600"
+  VERSION = "0.1.3.9000"
 end
