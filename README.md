@@ -74,10 +74,40 @@ Search for altmetrics by source
 Lagotto.works(source: 'twitter', instance: "crossref")
 ```
 
+Make a `/works` route request by source
+
+```ruby
+Lagotto.works_sources(source: 'twitter', per_page: 2)
+```
+
+Make a `/events` route request
+
+```ruby
+Lagotto.events(ids: '10.1371/journal.pone.0029797', instance: "crossref")
+```
+
+Make a `/publishers` route request
+
+```ruby
+Lagotto.publishers(id: 340)
+```
+
+Make a `/groups` route request
+
+```ruby
+Lagotto.groups()
+```
+
+Make a `/references` route request
+
+```ruby
+Lagotto.references(per_page: 5, instance: 'crossref')
+```
+
 ### On the CLI
 
 ```
-~  lagotto
+~$ lagotto
 Commands:
   lagotto help [COMMAND]  # Describe available commands or one specific command
   lagotto version         # Get lagotto-rb version
@@ -86,19 +116,19 @@ Commands:
 
 ```
 # A single id
-$ lagotto works http://doi.org/10.1371/journal.pone.0025110
+~$ lagotto works http://doi.org/10.1371/journal.pone.0025110
 
 DOI: 10.1371/journal.pone.0033693
 type: journal-article
 title: Methylphenidate Exposure Induces Dopamine Neuron Loss and Activation of Microglia in the Basal Ganglia of Mice
 
 # JSON output
-$ lagotto works --limit=2 --json
+~$ lagotto works --limit=2 --json
 
 {"meta":{"status":"ok","message-type":"work-list", ...
 
 # JSON output, parse with jq
-$ lagotto works --limit=2 --json | jq .works[].DOI
+~$ lagotto works --limit=2 --json | jq .works[].DOI
 
 "10.1371/journal.pgen.1005692"
 "10.1371/journal.pgen.1005425"

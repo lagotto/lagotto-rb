@@ -71,6 +71,13 @@
 
 <p><strong><code>lagotto-rb</code> - a Ruby client for the Lagotto application for article level metrics data</strong></p>
 
+<p>Other Lagotto clients:</p>
+
+<ul>
+<li>R - <a href="https://github.com/ropensci/alm">alm</a></li>
+<li>Python - <a href="https://github.com/lagotto/pyalm">pyalm</a></li>
+</ul>
+
 <h2>Dependencies</h2>
 
 <ul>
@@ -78,6 +85,29 @@
 <li><code>json</code> gem to convert to/from JSON</li>
 <li><code>bundler</code></li>
 <li><code>rake</code></li>
+</ul>
+
+<h2>Changes</h2>
+
+<p>For changes see the [Changelog][changelog]</p>
+
+<h2>API</h2>
+
+<p>Methods in relation to <a href="http://alm.plos.org/docs/api">Lagotto API</a> routes</p>
+
+<ul>
+<li><code>/works</code> - <code>Lagotto.works()</code></li>
+<li><code>/works_sources</code> - <code>Lagotto.works_sources()</code></li>
+<li><code>/events</code> - <code>Lagotto.events()</code></li>
+<li><code>/publishers</code> - <code>Lagotto.publishers()</code></li>
+<li><code>/groups</code> - <code>Lagotto.groups()</code></li>
+<li><code>/references</code> - <code>Lagotto.references()</code></li>
+<li><code>/work_types</code> - <code>Lagotto.work_types()</code></li>
+<li><code>/docs</code> - <code>Lagotto.docs()</code></li>
+<li><code>/relation_types</code> - <code>Lagotto.relation_types()</code></li>
+<li><code>/sources</code> - <code>Lagotto.sources()</code></li>
+<li><code>/recommendations</code> - <code>Lagotto.recommendations()</code></li>
+<li><code>/status</code> - <code>Lagotto.status()</code></li>
 </ul>
 
 <h2>Install</h2>
@@ -91,11 +121,9 @@
 
 <p>Install dependencies</p>
 
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_install'>install</span> <span class='id identifier rubyid_httparty'>httparty</span> <span class='id identifier rubyid_json'>json</span> <span class='id identifier rubyid_rake'>rake</span>
-<span class='id identifier rubyid_sudo'>sudo</span> <span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_install'>install</span> <span class='id identifier rubyid_bundler'>bundler</span>
-<span class='id identifier rubyid_git'>git</span> <span class='id identifier rubyid_clone'>clone</span> <span class='label'>https:</span><span class='tstring'><span class='regexp_beg'>/</span><span class='regexp_end'>/github</span></span><span class='period'>.</span><span class='id identifier rubyid_com'>com</span><span class='op'>/</span><span class='id identifier rubyid_lagotto'>lagotto</span><span class='op'>/</span><span class='id identifier rubyid_lagotto'>lagotto</span><span class='op'>-</span><span class='id identifier rubyid_rb'>rb</span><span class='period'>.</span><span class='id identifier rubyid_git'>git</span>
-<span class='id identifier rubyid_cd'>cd</span> <span class='id identifier rubyid_lagotto'>lagotto</span><span class='op'>-</span><span class='id identifier rubyid_rb'>rb</span>
-<span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_install'>install</span>
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_git'>git</span> <span class='id identifier rubyid_clone'>clone</span> <span class='id identifier rubyid_git'>git</span><span class='ivar'>@github</span><span class='period'>.</span><span class='id identifier rubyid_com'>com</span><span class='symbol'>:sckott</span><span class='op'>/</span><span class='id identifier rubyid_serrano'>serrano</span><span class='period'>.</span><span class='id identifier rubyid_git'>git</span>
+<span class='id identifier rubyid_cd'>cd</span> <span class='id identifier rubyid_serrano'>serrano</span>
+<span class='id identifier rubyid_rake'>rake</span> <span class='id identifier rubyid_install'>install</span>
 </code></pre>
 
 <h3>In Ruby repl</h3>
@@ -105,61 +133,63 @@
 <pre class="code ruby"><code class="ruby"><span class='const'>Lagotto</span><span class='period'>.</span><span class='id identifier rubyid_works'>works</span><span class='lparen'>(</span><span class='label'>ids:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>http://doi.org/10.15468/DL.SQNY5P</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>instance:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crossref</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 </code></pre>
 
-<pre class="code ruby"><code class="ruby">=&gt; {&quot;meta&quot;=&gt;
-  {&quot;status&quot;=&gt;&quot;ok&quot;,
-   &quot;message-type&quot;=&gt;&quot;work-list&quot;,
-   &quot;message-version&quot;=&gt;&quot;6.0.0&quot;,
-   &quot;total&quot;=&gt;1,
-   &quot;total_pages&quot;=&gt;1,
-   &quot;page&quot;=&gt;1},
- &quot;works&quot;=&gt;
-  [{&quot;id&quot;=&gt;&quot;http://doi.org/10.15468/DL.SQNY5P&quot;,
-    &quot;author&quot;=&gt;[{&quot;family&quot;=&gt;&quot;gbif.org&quot;}],
-    &quot;title&quot;=&gt;&quot;GBIF Occurrence Download&quot;,
-    &quot;issued&quot;=&gt;{&quot;date-parts&quot;=&gt;[[2015]]},
-    &quot;DOI&quot;=&gt;&quot;10.15468/DL.SQNY5P&quot;,
-    &quot;events&quot;=&gt;{},
-    &quot;timestamp&quot;=&gt;&quot;2015-11-18T16:11:46Z&quot;}]}
-</code></pre>
-
 <p>Search for altmetrics by source</p>
 
 <pre class="code ruby"><code class="ruby"><span class='const'>Lagotto</span><span class='period'>.</span><span class='id identifier rubyid_works'>works</span><span class='lparen'>(</span><span class='label'>source:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>twitter</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>instance:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crossref</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 </code></pre>
 
-<pre class="code ruby"><code class="ruby">=&gt; {&quot;meta&quot;=&gt;
-  {&quot;status&quot;=&gt;&quot;ok&quot;,
-   &quot;message-type&quot;=&gt;&quot;work-list&quot;,
-   &quot;message-version&quot;=&gt;&quot;6.0.0&quot;,
-   &quot;total&quot;=&gt;62467,
-   &quot;total_pages&quot;=&gt;1250,
-   &quot;page&quot;=&gt;1},
- &quot;works&quot;=&gt;
-  [{&quot;id&quot;=&gt;&quot;http://doi.org/10.15468/SQZYAJ&quot;,
-    &quot;author&quot;=&gt;
-     [{&quot;literal&quot;=&gt;&quot;46fec380-8e1d-11dd-8679-b8a03c50a862&quot;,
-       &quot;ORCID&quot;=&gt;&quot;http://orcid.org/46fec380-8e1d-11dd-8679-b8a03c50a862&quot;}],
-    &quot;title&quot;=&gt;&quot;Kartlegging av spredning av fremmede bartrær&quot;,
-    &quot;issued&quot;=&gt;{&quot;date-parts&quot;=&gt;[[2015]]},
-    &quot;DOI&quot;=&gt;&quot;10.15468/SQZYAJ&quot;,
-    &quot;events&quot;=&gt;{},
-    &quot;timestamp&quot;=&gt;&quot;2015-11-18T16:34:52Z&quot;},
-   {&quot;id&quot;=&gt;&quot;http://doi.org/10.15468/DL.N7WA77&quot;,
-    &quot;author&quot;=&gt;[{&quot;family&quot;=&gt;&quot;gbif.org&quot;}],
-    &quot;title&quot;=&gt;&quot;GBIF Occurrence Download&quot;,
-    &quot;issued&quot;=&gt;{&quot;date-parts&quot;=&gt;[[2015]]},
-    &quot;DOI&quot;=&gt;&quot;10.15468/DL.N7WA77&quot;,
-    &quot;events&quot;=&gt;{},
-    &quot;timestamp&quot;=&gt;&quot;2015-11-18T16:34:16Z&quot;},
+<p>Make a <code>/works</code> route request by source</p>
 
-...
+<pre class="code ruby"><code class="ruby"><span class='const'>Lagotto</span><span class='period'>.</span><span class='id identifier rubyid_works_sources'>works_sources</span><span class='lparen'>(</span><span class='label'>source:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>twitter</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>per_page:</span> <span class='int'>2</span><span class='rparen'>)</span>
 </code></pre>
 
-<h3>To DO</h3>
+<p>Make a <code>/events</code> route request</p>
 
-<ul>
-<li>Command line</li>
-</ul>
+<pre class="code ruby"><code class="ruby"><span class='const'>Lagotto</span><span class='period'>.</span><span class='id identifier rubyid_events'>events</span><span class='lparen'>(</span><span class='label'>ids:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>10.1371/journal.pone.0029797</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>instance:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crossref</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Make a <code>/publishers</code> route request</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>Lagotto</span><span class='period'>.</span><span class='id identifier rubyid_publishers'>publishers</span><span class='lparen'>(</span><span class='label'>id:</span> <span class='int'>340</span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Make a <code>/groups</code> route request</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>Lagotto</span><span class='period'>.</span><span class='id identifier rubyid_groups'>groups</span><span class='lparen'>(</span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Make a <code>/references</code> route request</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>Lagotto</span><span class='period'>.</span><span class='id identifier rubyid_references'>references</span><span class='lparen'>(</span><span class='label'>per_page:</span> <span class='int'>5</span><span class='comma'>,</span> <span class='label'>instance:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crossref</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<h3>On the CLI</h3>
+
+<pre class="code ruby"><code class="ruby">~$ lagotto
+Commands:
+  lagotto help [COMMAND]  # Describe available commands or one specific command
+  lagotto version         # Get lagotto-rb version
+  lagotto works [ids]     # Get works by ids
+</code></pre>
+
+<pre class="code ruby"><code class="ruby"># A single id
+~$ lagotto works http://doi.org/10.1371/journal.pone.0025110
+
+DOI: 10.1371/journal.pone.0033693
+type: journal-article
+title: Methylphenidate Exposure Induces Dopamine Neuron Loss and Activation of Microglia in the Basal Ganglia of Mice
+
+# JSON output
+~$ lagotto works --limit=2 --json
+
+{&quot;meta&quot;:{&quot;status&quot;:&quot;ok&quot;,&quot;message-type&quot;:&quot;work-list&quot;, ...
+
+# JSON output, parse with jq
+~$ lagotto works --limit=2 --json | jq .works[].DOI
+
+&quot;10.1371/journal.pgen.1005692&quot;
+&quot;10.1371/journal.pgen.1005425&quot;
+</code></pre>
 
 <h2>Meta</h2>
 
@@ -170,7 +200,7 @@
 </div></div>
 
     <div id="footer">
-  Generated on Thu Nov 19 18:47:10 2015 by
+  Generated on Fri Jan  8 11:53:56 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>
