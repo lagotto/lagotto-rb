@@ -21,6 +21,27 @@ Other Lagotto clients:
 * `bundler`
 * `rake`
 
+## Changes
+
+For changes see the [Changelog][changelog]
+
+## API
+
+Methods in relation to [Lagotto API][lapi] routes
+
+* `/works` - `Lagotto.works()`
+* `/works_sources` - `Lagotto.works_sources()`
+* `/events` - `Lagotto.events()`
+* `/publishers` - `Lagotto.publishers()`
+* `/groups` - `Lagotto.groups()`
+* `/references` - `Lagotto.references()`
+* `/work_types` - `Lagotto.work_types()`
+* `/docs` - `Lagotto.docs()`
+* `/relation_types` - `Lagotto.relation_types()`
+* `/sources` - `Lagotto.sources()`
+* `/recommendations` - `Lagotto.recommendations()`
+* `/status` - `Lagotto.status()`
+
 ## Install
 
 ### Release version
@@ -34,11 +55,9 @@ gem install lagotto-rb
 Install dependencies
 
 ```
-gem install httparty json rake
-sudo gem install bundler
-git clone https://github.com/lagotto/lagotto-rb.git
-cd lagotto-rb
-bundle install
+git clone git@github.com:sckott/serrano.git
+cd serrano
+rake install
 ```
 
 ### In Ruby repl
@@ -49,64 +68,45 @@ Get altmetrics by DOI
 Lagotto.works(ids: 'http://doi.org/10.15468/DL.SQNY5P', instance: "crossref")
 ```
 
-```ruby
-=> {"meta"=>
-  {"status"=>"ok",
-   "message-type"=>"work-list",
-   "message-version"=>"6.0.0",
-   "total"=>1,
-   "total_pages"=>1,
-   "page"=>1},
- "works"=>
-  [{"id"=>"http://doi.org/10.15468/DL.SQNY5P",
-    "author"=>[{"family"=>"gbif.org"}],
-    "title"=>"GBIF Occurrence Download",
-    "issued"=>{"date-parts"=>[[2015]]},
-    "DOI"=>"10.15468/DL.SQNY5P",
-    "events"=>{},
-    "timestamp"=>"2015-11-18T16:11:46Z"}]}
-```
-
 Search for altmetrics by source
 
 ```ruby
 Lagotto.works(source: 'twitter', instance: "crossref")
 ```
 
-```ruby
-=> {"meta"=>
-  {"status"=>"ok",
-   "message-type"=>"work-list",
-   "message-version"=>"6.0.0",
-   "total"=>62467,
-   "total_pages"=>1250,
-   "page"=>1},
- "works"=>
-  [{"id"=>"http://doi.org/10.15468/SQZYAJ",
-    "author"=>
-     [{"literal"=>"46fec380-8e1d-11dd-8679-b8a03c50a862",
-       "ORCID"=>"http://orcid.org/46fec380-8e1d-11dd-8679-b8a03c50a862"}],
-    "title"=>"Kartlegging av spredning av fremmede bartrær",
-    "issued"=>{"date-parts"=>[[2015]]},
-    "DOI"=>"10.15468/SQZYAJ",
-    "events"=>{},
-    "timestamp"=>"2015-11-18T16:34:52Z"},
-   {"id"=>"http://doi.org/10.15468/DL.N7WA77",
-    "author"=>[{"family"=>"gbif.org"}],
-    "title"=>"GBIF Occurrence Download",
-    "issued"=>{"date-parts"=>[[2015]]},
-    "DOI"=>"10.15468/DL.N7WA77",
-    "events"=>{},
-    "timestamp"=>"2015-11-18T16:34:16Z"},
+### On the CLI
 
-...
+```
+~  lagotto
+Commands:
+  lagotto help [COMMAND]  # Describe available commands or one specific command
+  lagotto version         # Get lagotto-rb version
+  lagotto works [ids]     # Get works by ids
 ```
 
-### To DO
+```
+# A single id
+$ lagotto works http://doi.org/10.1371/journal.pone.0025110
 
-* Command line
+DOI: 10.1371/journal.pone.0033693
+type: journal-article
+title: Methylphenidate Exposure Induces Dopamine Neuron Loss and Activation of Microglia in the Basal Ganglia of Mice
+
+# JSON output
+$ lagotto works --limit=2 --json
+
+{"meta":{"status":"ok","message-type":"work-list", ...
+
+# JSON output, parse with jq
+$ lagotto works --limit=2 --json | jq .works[].DOI
+
+"10.1371/journal.pgen.1005692"
+"10.1371/journal.pgen.1005425"
+```
 
 ## Meta
 
 * Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
 * License: MIT
+
+[lapi]: http://alm.plos.org/docs/api
