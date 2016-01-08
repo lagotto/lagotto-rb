@@ -1,3 +1,3 @@
-## CHANGES IN VERSION 0.0.1.99 (2014-12-04)
+## 0.2.0 (2016-01-08)
 
-+ started gem
++ First version to Rubygems

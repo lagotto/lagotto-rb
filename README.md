@@ -5,21 +5,14 @@ lagotto-rb
 [![gem version](https://img.shields.io/gem/v/lagotto-rb.svg)](https://rubygems.org/gems/lagotto-rb)
 [![codecov.io](http://codecov.io/github/lagotto/lagotto-rb/coverage.svg?branch=master)](http://codecov.io/github/lagotto/lagotto-rb?branch=master)
 
-__This is alpha software, so expect changes__
+A Ruby client for the Lagotto application for article level metrics data
 
-__`lagotto-rb` - a Ruby client for the Lagotto application for article level metrics data__
+__This is alpha software, so expect changes__
 
 Other Lagotto clients:
 
 * R - [alm](https://github.com/ropensci/alm)
 * Python - [pyalm](https://github.com/lagotto/pyalm)
-
-## Dependencies
-
-* `HTTParty` gem to make web calls to Crossref APIs
-* `json` gem to convert to/from JSON
-* `bundler`
-* `rake`
 
 ## Changes
 
@@ -140,3 +133,4 @@ title: Methylphenidate Exposure Induces Dopamine Neuron Loss and Activation of M
 * License: MIT
 
 [lapi]: http://alm.plos.org/docs/api
+[changelog]: https://github.com/lagotto/lagotto-rb/blob/master/CHANGELOG.md
